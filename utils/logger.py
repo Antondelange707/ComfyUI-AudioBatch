@@ -49,7 +49,6 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-print("Crea el logger")
 # Create a new logger
 logger = logging.getLogger(NODES_NAME)
 logger.propagate = False
@@ -70,7 +69,6 @@ effective_comfy_level = logging.getLogger().getEffectiveLevel()
 # 2. Check our custom environment variable for more verbosity
 try:
     nodes_debug_env = int(os.environ.get(NODES_DEBUG_VAR, "0"))
-    print(nodes_debug_env)
 except ValueError:
     nodes_debug_env = 0
 # 3. Set node's logger level
