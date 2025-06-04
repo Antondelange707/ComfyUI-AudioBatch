@@ -102,6 +102,8 @@ workflows, especially when dealing with multiple audio inputs or outputs.
 
 ## &#x0001F680; Installation
 
+You can install the nodes from the ComfyUI nodes manager, the name is *Audio Batch*, or just do it manually:
+
 1.  Clone this repository into your `ComfyUI/custom_nodes/` directory:
     ```bash
     cd ComfyUI/custom_nodes/
@@ -121,7 +123,7 @@ These are typically already present in a standard ComfyUI environment.
 
 ## &#x0001F5BC;&#xFE0F; Examples
 
-The examples are available in the ComfyUI workflow templates, in the *Audio Batch* section.
+Once installed the examples are available in the ComfyUI workflow templates, in the *Audio Batch* section.
 
 - [audio_batch_select_example.json](example_workflows/audio_batch_select_example.json): Shows how to create a batch and
   how to extract a single element from the batch.
@@ -149,3 +151,7 @@ The examples are available in the ComfyUI workflow templates, in the *Audio Batc
 ## &#x2696;&#xFE0F; License
 
 [GPL-3.0](LICENSE)
+
+## &#x0001F64F; Attributions
+
+- Good part of the initial code and this README was generated using Gemini 2.5 Pro.
