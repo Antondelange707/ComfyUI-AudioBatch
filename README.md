@@ -1,10 +1,26 @@
-# ComfyUI Audio Batch & Utility Nodes
+# ComfyUI Audio Batch & Utility Nodes &#x0001F3A7;&#x0001F39B;&#xFE0F;
 
 This repository provides a set of custom nodes for ComfyUI focused on audio batching and common audio processing tasks like
 channel conversion and resampling. These nodes are designed to help manage and prepare audio data within your ComfyUI
 workflows, especially when dealing with multiple audio inputs or outputs.
 
-## Nodes
+## &#x0001F4DC; Table of Contents
+
+- [&#x2728; Nodes](#-nodes)
+  - [1. Batch Audios](#1-batch-audios)
+  - [2. Select Audio from Batch](#2-select-audio-from-batch)
+  - [3. Audio Channel Converter](#3-audio-channel-converter)
+  - [4. Audio Resampler](#4-audio-resampler)
+  - [5. Audio Channel Conv and Resampler](#5-audio-channel-conv-and-resampler)
+- [&#x0001F680; Installation](#-installation)
+- [&#x0001F4E6; Dependencies](#-dependencies)
+- [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
+- [&#x0001F4DD; Usage Notes](#-usage-notes)
+- [&#x0001F6E0;&#xFE0F; Future Improvements / TODO](#&#xFE0F;-future-improvements--todo)
+- [&#x2696;&#xFE0F; License](#&#xFE0F;-license)
+- [&#x0001F64F; Attributions](#-attributions)
+
+## &#x2728; Nodes
 
 ### 1. Batch Audios
    - **Display Name:** `Batch Audios`
@@ -84,7 +100,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Output:**
      - `audio_out` (AUDIO): The audio after both channel conversion and resampling have been applied.
 
-## Installation
+## &#x0001F680; Installation
 
 1.  Clone this repository into your `ComfyUI/custom_nodes/` directory:
     ```bash
@@ -95,7 +111,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
 
 The nodes should then appear under the "audio/batch" and "audio/conversion" categories in the "Add Node" menu.
 
-## Dependencies
+## &#x0001F4E6; Dependencies
 
 - PyTorch
 - Torchaudio (for resampling and potentially other audio operations)
@@ -103,7 +119,7 @@ The nodes should then appear under the "audio/batch" and "audio/conversion" cate
 
 These are typically already present in a standard ComfyUI environment.
 
-## Examples
+## &#x0001F5BC;&#xFE0F; Examples
 
 The examples are available in the ComfyUI workflow templates, in the *Audio Batch* section.
 
@@ -112,17 +128,17 @@ The examples are available in the ComfyUI workflow templates, in the *Audio Batc
 - [resample_force_stereo.json](example_workflows/resample_force_stereo.json): Shows how to change the number of channels
   and the sample rate.
 
-## Usage Notes
+## &#x0001F4DD; Usage Notes
 
 - **AUDIO Type:** These nodes work with ComfyUI's standard "AUDIO" data type, which is a Python dictionary containing:
   - `'waveform'`: A `torch.Tensor` of shape `(batch_size, num_channels, num_samples)`.
   - `'sample_rate'`: An `int` representing the sample rate in Hz.
-- **Logging:** The nodes use Python's `logging` module. Debug messages can be helpful for understanding the transformations being applied.
-  You can control log verbosity through ComfyUI's startup arguments (e.g., `--preview-method auto --verbose` for more detailed ComfyUI logs
+- **Logging:** &#x0001F50A; The nodes use Python's `logging` module. Debug messages can be helpful for understanding the transformations being applied.
+  You can control log verbosity through ComfyUI's startup arguments (e.g., `--preview-method auto --verbose DEBUG` for more detailed ComfyUI logs
   which might also affect custom node loggers if they are configured to inherit levels). The logger name used is "AudioBatch".
   You can force debugging level for these nodes defining the `AUDIOBATCH_NODES_DEBUG` environment variable to `1`.
 
-## Future Improvements / TODO
+## &#x0001F6E0;&#xFE0F; Future Improvements / TODO
 
 - Add more sophisticated downmixing options for multi-channel audio (e.g., 5.1 to stereo).
 - Allow user to choose padding value (e.g., silence, edge, reflect) for length matching in "Batch Audios".
@@ -130,6 +146,6 @@ The examples are available in the ComfyUI workflow templates, in the *Audio Batc
 - More options for stereo-to-mono conversion (e.g., take left channel, take right channel).
 - If you are interested on them, please open an issue.
 
-## License
+## &#x2696;&#xFE0F; License
 
 [GPL-3.0](LICENSE)
