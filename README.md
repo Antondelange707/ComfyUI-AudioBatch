@@ -103,6 +103,15 @@ The nodes should then appear under the "audio/batch" and "audio/conversion" cate
 
 These are typically already present in a standard ComfyUI environment.
 
+## Examples
+
+The examples are available in the ComfyUI workflow templates, in the *Audio Batch* section.
+
+- [audio_batch_select_example.json](example_workflows/audio_batch_select_example.json): Shows how to create a batch and
+  how to extract a single element from the batch.
+- [resample_force_stereo.json](example_workflows/resample_force_stereo.json): Shows how to change the number of channels
+  and the sample rate.
+
 ## Usage Notes
 
 - **AUDIO Type:** These nodes work with ComfyUI's standard "AUDIO" data type, which is a Python dictionary containing:
