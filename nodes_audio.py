@@ -448,3 +448,49 @@ class AudioProcessAdvanced:
         (audio_after_resample,) = resampler_node.resample_audio(audio_after_channels, target_sample_rate)
 
         return (audio_after_resample,)
+
+
+class AudioInfo:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "audio": ("AUDIO",),
+            },
+        }
+
+    RETURN_TYPES = ("AUDIO", "INT", "INT", "INT", "INT")
+    RETURN_NAMES = ("audio_bypass", "batch_size", "channels", "num_samples", "sample_rate")
+    FUNCTION = "show_info"
+    CATEGORY = BASE_CATEGORY + "/" + CONV_CATEGORY
+    DESCRIPTION = "Shows information about the audio."
+    UNIQUE_NAME = "SET_AudioInfo"
+    DISPLAY_NAME = "Audio Information"
+
+    def show_info(self, audio: dict):
+        wav = audio['waveform']  # (B, C, T)
+        sample_rate = audio['sample_rate']
+        return audio, wav.shape[0], wav.shape[1], wav.shape[2], sample_rate
+
+
+class AudioForceChannels:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "audio": ("AUDIO",),
+                "channels": ("INT", {"default": 0, "min": 0, "max": 2}),
+            },
+        }
+
+    RETURN_TYPES = ("AUDIO",)
+    RETURN_NAMES = ("audio",)
+    FUNCTION = "force_channels"
+    CATEGORY = BASE_CATEGORY + "/" + CONV_CATEGORY
+    DESCRIPTION = "Forces the number of channels. 0 means keep same."
+    UNIQUE_NAME = "SET_AudioForceChannels"
+    DISPLAY_NAME = "Audio Force Channels"
+    CHANNELS_TO_MODE = ["keep", "force_mono", "force_stereo"]
+
+    def force_channels(self, audio: dict, channels: int):
+        return AudioChannelConverter().convert_channels(audio, self.CHANNELS_TO_MODE[channels])
