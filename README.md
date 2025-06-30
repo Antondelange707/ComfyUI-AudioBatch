@@ -77,7 +77,21 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Output:**
      - `audio_out` (AUDIO): The audio with the converted channel layout. The batch size and sample rate are preserved.
 
-### 4. Audio Resampler
+### 4. Audio Force Channels
+   - **Display Name:** `Audio Force Channels`
+   - **Internal Name:** `SET_AudioForceChannels`
+   - **Category:** `audio/conversion`
+   - **Description:** Forces the number of channels. 0 means keep same.
+   - **Inputs:**
+     - `audio` (AUDIO): The input audio.
+     - `channels` (INT): The desired channel number of channels. This is equivalent to **Audio Channel Converter**:
+       - `0`: `keep`
+       - `1`: `force_mono`
+       - `2`: `force_stereo`
+   - **Output:**
+     - `audio` (AUDIO): The audio with the converted channel layout. The batch size and sample rate are preserved.
+
+### 5. Audio Resampler
    - **Display Name:** `Audio Resampler`
    - **Internal Name:** `SET_AudioResampler`
    - **Category:** `audio/conversion`
@@ -88,7 +102,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Output:**
      - `audio_out` (AUDIO): The resampled audio. The batch size and channel count are preserved.
 
-### 5. Audio Channel Conv and Resampler
+### 6. Audio Channel Conv and Resampler
    - **Display Name:** `Audio Channel Conv and Resampler`
    - **Internal Name:** `SET_AudioChannelConvResampler`
    - **Category:** `audio/conversion`
@@ -99,6 +113,20 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `target_sample_rate` (INT): Same options as the "Audio Resampler" node.
    - **Output:**
      - `audio_out` (AUDIO): The audio after both channel conversion and resampling have been applied.
+
+### 7. Audio Information
+   - **Display Name:** `Audio Information`
+   - **Internal Name:** `SET_AudioInfo`
+   - **Category:** `audio/conversion`
+   - **Description:** Shows information about the audio.
+   - **Inputs:**
+     - `audio` (AUDIO): The input audio.
+   - **Output:**
+     - `audio_bypass` (AUDIO): The audio from the input, here to make easier its use.
+     - `batch_size` (INT): Size of the audio batch, how many sounds are in the batch.
+     - `channels` (INT): Number of audio channels (1 mono, 2 stereo)
+     - `num_samples` (INT): How many samples contains the audio. Duratio [s] = `num_samples` / `sample_rate`
+     - `sample_rate` (INT): Sampling frequency, how many samples per second.
 
 ## &#x0001F680; Installation
 
@@ -147,6 +175,14 @@ Once installed the examples are available in the ComfyUI workflow templates, in 
 - Option in "Batch Audios" to truncate to shortest instead of padding to longest.
 - More options for stereo-to-mono conversion (e.g., take left channel, take right channel).
 - If you are interested on them, please open an issue.
+
+## &#x0001F4DC; Project History
+
+- 1.0.0 2025-06-03: Initial release
+  - Initial 5 nodes: `Batch Audios`, `Select Audio from Batch`, `Audio Channel Converter`, `Audio Resampler` and `Audio Channel Conv and Resampler`
+
+- 1.1.0 2025-06-30: Two new nodes
+  - Added 2 new nodes: `Audio Force Channels` and `Audio Information`
 
 ## &#x2696;&#xFE0F; License
 
