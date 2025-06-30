@@ -17,6 +17,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
 - [&#x0001F4DD; Usage Notes](#-usage-notes)
 - [&#x0001F6E0;&#xFE0F; Future Improvements / TODO](#&#xFE0F;-future-improvements--todo)
+- [&#x0001F4DC; Project History](#-project-history)
 - [&#x2696;&#xFE0F; License](#&#xFE0F;-license)
 - [&#x0001F64F; Attributions](#-attributions)
 
