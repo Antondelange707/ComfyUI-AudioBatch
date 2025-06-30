@@ -187,6 +187,8 @@ Once installed the examples are available in the ComfyUI workflow templates, in 
 - 1.1.0 2025-06-30: Two new nodes
   - Added 2 new nodes: `Audio Force Channels` and `Audio Information`
 
+- 1.1.1 2025-06-30: Just better project description
+
 ## &#x2696;&#xFE0F; License
 
 [GPL-3.0](LICENSE)
