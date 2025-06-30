@@ -1,7 +1,7 @@
 [project]
 name = "audio-batch"
 description = "Audio batch creation, extraction, resample, mono and stereo conversion."
-version = "1.0.0"
+version = "1.1.0"
 license = { file = "LICENSE" }
 dependencies = []
 
