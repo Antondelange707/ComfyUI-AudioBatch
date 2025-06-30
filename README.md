@@ -13,7 +13,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [4. Audio Force Channels](#4-audio-force-channels)
   - [5. Audio Resampler](#5-audio-resampler)
   - [6. Audio Channel Conv and Resampler](#6-audio-channel-conv-and-resampler)
-  - [7. Audio Information](#6-audio-information)
+  - [7. Audio Information](#7-audio-information)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
