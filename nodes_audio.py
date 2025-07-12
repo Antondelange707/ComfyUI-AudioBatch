@@ -68,7 +68,8 @@ class AudioBatch:
             # For (B, C, N), we can reshape to (B*C, N), resample, then reshape back.
             # Or, if T.Resample handles batch dims appropriately (some versions might if C=1 or applied per channel).
             # Let's reshape for robustness with T.Resample.
-            resampler = T.Resample(orig_freq=original_sr, new_freq=target_sr, dtype=reference_dtype).to(reference_device)
+            resampler = T.Resample(orig_freq=original_sr, new_freq=target_sr, dtype=reference_dtype,
+                                   lowpass_filter_width=24).to(reference_device)
 
             if current_channels == 1:
                 # Reshape (B, 1, N) to (B, N) for resampler, then unsqueeze back
@@ -382,7 +383,8 @@ class AudioResampler:
         return {
             "required": {
                 "audio": ("AUDIO",),
-                "target_sample_rate": ("INT", {"default": 0, "min": 0, "max": 192000, "step": 100}),
+                "target_sample_rate": ("INT", {
+                    "default": 0, "min": 0, "max": 192000, "step": 100, "tooltip": "Output sample rate, 0 is same as input"}),
             },
         }
 
@@ -414,11 +416,12 @@ class AudioResampler:
             # resampler = T.Resample(orig_freq=original_sample_rate, new_freq=target_sample_rate).to(device)
             # resampled_waveform = resampler(waveform)
             resampler = T.Resample(orig_freq=original_sample_rate, new_freq=target_sample_rate,
-                                   dtype=waveform.dtype  # Preserve dtype
+                                   dtype=waveform.dtype,  # Preserve dtype
+                                   lowpass_filter_width=24
                                    ).to(waveform.device)  # Perform resampling on the tensor's current device
 
             resampled_waveform = resampler(waveform)
-            logger.info(f"Resampled audio from {original_sample_rate}Hz to {target_sample_rate}Hz. "
+            logger.info(f"Resampling audio from {original_sample_rate}Hz to {target_sample_rate}Hz. "
                         f"Original shape: {waveform.shape}, New shape: {resampled_waveform.shape}")
             processed_audio_dict = {"waveform": resampled_waveform, "sample_rate": target_sample_rate}
             return (processed_audio_dict,)
@@ -441,7 +444,7 @@ class AudioProcessAdvanced:
                                                    "stereo_to_mono/force_mono: 1 channel,\n"
                                                    "mono_to_stereo/force_stereo: 2 channels"}),
                 "target_sample_rate": ("INT", {"default": 0, "min": 0, "max": 192000, "step": 100.,
-                                               "tooltip": "Output sample rate"}),
+                                               "tooltip": "Output sample rate, 0 is same as input"}),
             },
         }
     RETURN_TYPES = ("AUDIO",)
