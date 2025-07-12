@@ -7,11 +7,13 @@
 import torch
 import torchaudio.transforms as T
 from .utils.logger import main_logger
+from .utils.misc import parse_time_to_seconds
 
 logger = main_logger
 BASE_CATEGORY = "audio"
 BATCH_CATEGORY = "batch"
 CONV_CATEGORY = "conversion"
+MANIPULATION_CATEGORY = "manipulation"
 
 
 def convert_batch_to_stereo_tensor(audio_waveform_mono_batch: torch.Tensor) -> torch.Tensor:
@@ -28,8 +30,8 @@ class AudioBatch:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "audio1": ("AUDIO",),
-                "audio2": ("AUDIO",),
+                "audio1": ("AUDIO", {"tooltip": "The first audio input. Can be a single audio item or a batch"}),
+                "audio2": ("AUDIO", {"tooltip": "The second audio input. Can be a single audio item or a batch"}),
             }
         }
 
@@ -214,17 +216,24 @@ class SelectAudioFromBatch:
                     "min": 0,
                     "max": 0xffffffffffffffff,  # Effectively unbounded, but UI might cap
                     "step": 1,
-                    "display": "number"
+                    "display": "number",
+                    "tootip": "The 0-based index of the audio stream to select from the batch"
                 }),
                 "behavior_out_of_range": (["silence_original_length", "silence_fixed_length", "error"], {
-                    "default": "silence_original_length"
+                    "default": "silence_original_length",
+                    "tootip": ("silence_original_length: Output silent audio with the same channel count and duration as "
+                               "items in the original batch.\n"
+                               "silence_fixed_length: Output silent audio with a duration specified by "
+                               " silence_duration_seconds.\n"
+                               "error: Raise an error (which will halt the workflow and display an error in ComfyUI)")
                 }),
                 "silence_duration_seconds": ("FLOAT", {  # Only used if behavior is "silence_fixed_length"
                     "default": 1.0,
                     "min": 0.01,
                     "max": 3600.0,  # 1 hour
                     "step": 0.1,
-                    "display": "number"
+                    "display": "number",
+                    "tootip": "The duration of the silent audio if `behavior_out_of_range` is set to `silence_fixed_length`"
                 }),
             }
         }
@@ -296,7 +305,10 @@ class AudioChannelConverter:
             "required": {
                 "audio": ("AUDIO",),
                 "channel_conversion": (["keep", "stereo_to_mono", "mono_to_stereo", "force_mono", "force_stereo"],
-                                       {"default": "keep"}),
+                                       {"default": "keep",
+                                        "tooltip": "keep: maintain same channels,\n"
+                                                   "stereo_to_mono/force_mono: 1 channel,\n"
+                                                   "mono_to_stereo/force_stereo: 2 channels"}),
             },
         }
 
@@ -424,8 +436,12 @@ class AudioProcessAdvanced:
             "required": {
                 "audio": ("AUDIO",),
                 "channel_conversion": (["keep", "stereo_to_mono", "mono_to_stereo", "force_mono", "force_stereo"],
-                                       {"default": "keep"}),
-                "target_sample_rate": ("INT", {"default": 0, "min": 0, "max": 192000, "step": 100}),
+                                       {"default": "keep",
+                                        "tooltip": "keep: maintain same channels,\n"
+                                                   "stereo_to_mono/force_mono: 1 channel,\n"
+                                                   "mono_to_stereo/force_stereo: 2 channels"}),
+                "target_sample_rate": ("INT", {"default": 0, "min": 0, "max": 192000, "step": 100.,
+                                               "tooltip": "Output sample rate"}),
             },
         }
     RETURN_TYPES = ("AUDIO",)
@@ -494,3 +510,48 @@ class AudioForceChannels:
 
     def force_channels(self, audio: dict, channels: int):
         return AudioChannelConverter().convert_channels(audio, self.CHANNELS_TO_MODE[channels])
+
+
+class AudioCut:
+    """ From https://github.com/christian-byrne/audio-separation-nodes-comfyui/ """
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "audio": ("AUDIO",),
+                "start_time": ("STRING", {
+                    "default": "0:00",
+                    "tooltip": "Start time in HH:MM:SS.ss format, or just a float."
+                }),
+                "end_time": ("STRING", {
+                    "default": "1:00",
+                    "tooltip": "End time in HH:MM:SS.ss format, or just a float."
+                }),
+            },
+        }
+
+    RETURN_TYPES = ("AUDIO",)
+    RETURN_NAMES = ("audio_out",)
+    FUNCTION = "cut"
+    CATEGORY = BASE_CATEGORY + "/" + MANIPULATION_CATEGORY
+    DESCRIPTION = "Cuts a portion of the input audio. Can use seconds or HH:MM:SS.ss."
+    UNIQUE_NAME = "SET_AudioCut"
+    DISPLAY_NAME = "Audio Cut"
+
+    def cut(self, audio: dict, start_time: str, end_time: str):
+        waveform = audio["waveform"]
+        sample_rate = audio["sample_rate"]
+        length = waveform.shape[-1] - 1
+
+        start_frame = int(parse_time_to_seconds(start_time) * sample_rate)
+        start_frame = max(0, min(start_frame, length))
+
+        end_frame = int(parse_time_to_seconds(end_time) * sample_rate)
+        end_frame = max(0, min(end_frame, length))
+
+        logger.debug(f"Cutting audio from {start_frame} to {end_frame} (SR: {sample_rate})")
+        if start_frame > end_frame:
+            raise ValueError("Audio Cut: Start time must be smaller than end time and both be within the audio length.")
+
+        return ({"waveform": waveform[..., start_frame:end_frame],
+                 "sample_rate": sample_rate},)

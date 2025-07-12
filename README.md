@@ -14,6 +14,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [5. Audio Resampler](#5-audio-resampler)
   - [6. Audio Channel Conv and Resampler](#6-audio-channel-conv-and-resampler)
   - [7. Audio Information](#7-audio-information)
+  - [8. Audio Cut](#8-audio-cut)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
@@ -131,6 +132,18 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `num_samples` (INT): How many samples contains the audio. Duratio [s] = `num_samples` / `sample_rate`
      - `sample_rate` (INT): Sampling frequency, how many samples per second.
 
+### 8. Audio Cut
+   - **Display Name:** `Audio Cut`
+   - **Internal Name:** `SET_AudioCut`
+   - **Category:** `audio/manipulation`
+   - **Description:** Cuts a portion of the input audio.
+   - **Inputs:**
+     - `audio` (AUDIO): The input audio.
+     - `start_time` (STRING): Starting time. Can be in the HH:MM:SS.ss format, or be just a float. I.e. 1:30 is 1 minute 30 seconds.
+     - `end_time` (STRING): Ending time. Can be in the HH:MM:SS.ss format, or be just a float. I.e. 90.5 is 1 minute 30 seconds and 500 ms.
+   - **Output:**
+     - `audio_out` (AUDIO): The selected portion of the audio.
+
 ## &#x0001F680; Installation
 
 You can install the nodes from the ComfyUI nodes manager, the name is *Audio Batch*, or just do it manually:
@@ -196,3 +209,4 @@ Once installed the examples are available in the ComfyUI workflow templates, in 
 ## &#x0001F64F; Attributions
 
 - Good part of the initial code and this README was generated using Gemini 2.5 Pro.
+- Audio Cut is highly based on [audio-separation-nodes-comfyui](https://github.com/christian-byrne/audio-separation-nodes-comfyui/)
