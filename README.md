@@ -15,6 +15,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [6. Audio Channel Conv and Resampler](#6-audio-channel-conv-and-resampler)
   - [7. Audio Information](#7-audio-information)
   - [8. Audio Cut](#8-audio-cut)
+  - [9. Audio Blend](#9-audio-blend)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
@@ -143,6 +144,19 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `end_time` (STRING): Ending time. Can be in the HH:MM:SS.ss format, or be just a float. I.e. 90.5 is 1 minute 30 seconds and 500 ms.
    - **Output:**
      - `audio_out` (AUDIO): The selected portion of the audio.
+
+### 9. Audio Blend
+   - **Display Name:** `Audio Blend`
+   - **Internal Name:** `SET_AudioBlend`
+   - **Category:** `audio/manipulation`
+   - **Description:** Blends two audio inputs by applying gain and adding them. Supports batches. It can be used to amplify just one audio (or batch)
+   - **Inputs:**
+     - `audio1` (AUDIO): The first audio input (batch supported).
+     - `audio2` (AUDIO): The second audio input (batch supported). Is optional.
+     - `gain1` (FLOAT): Volume gain for the first audio. Can be negative to subtract.
+     - `gain2` (FLOAT): Volume gain for the second audio. Can be negative to subtract.
+   - **Output:**
+     - `audio_out` (AUDIO): The blended audio.
 
 ## &#x0001F680; Installation
 
