@@ -3,10 +3,10 @@
 # Copyright (c) 2025 Instituto Nacional de Tecnologïa Industrial
 # License: GPL-3.0
 # Project: ComfyUI-AudioBatch
-from . import nodes_audio
+from .source.nodes import nodes_audio
 import inspect
 import logging
-from .utils.misc import NODES_NAME
+from .source.nodes.utils.misc import NODES_NAME
 
 init_logger = logging.getLogger(NODES_NAME + ".__init__")
 
