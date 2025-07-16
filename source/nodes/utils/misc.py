@@ -26,8 +26,12 @@ def parse_time_to_seconds(time_str: str) -> float:
     Raises:
         ValueError: If the string format is invalid.
     """
+    if time_str is None:
+        return 0.0
     if not isinstance(time_str, str):
         raise TypeError("Input must be a string.")
+    if not time_str:
+        return 0.0
 
     # First, try a direct float conversion for the simplest case.
     try:
@@ -44,9 +48,14 @@ def parse_time_to_seconds(time_str: str) -> float:
 
         # Iterate through parts in reverse (from seconds to hours)
         for part in reversed(parts):
+            if multiplier > 3600:
+                raise ValueError()
             if not part:  # Handles empty parts like in "1::30"
-                raise ValueError("Empty part in time string")
-            total_seconds += float(part) * multiplier
+                raise RuntimeError("Empty part in time string (`{time_str}`)")
+            part_number = float(part)
+            if (part_number > 59 and multiplier < 3600) or part_number < 0:
+                raise RuntimeError("Minutes or seconds segment is out of range (0-59) (`{time_str}`)")
+            total_seconds += part_number * multiplier
             multiplier *= 60  # Next multiplier is 60 times bigger
 
         return total_seconds
@@ -54,3 +63,5 @@ def parse_time_to_seconds(time_str: str) -> float:
         # Re-raise with a clear, user-friendly message.
         raise ValueError(f"Invalid time format: '{time_str}'. "
                          "Expected 'SECONDS', 'MM:SS.ss', or 'HH:MM:SS.ss'.") from e
+    except RuntimeError as e:
+        raise ValueError(str(e))
