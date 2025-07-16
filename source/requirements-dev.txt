@@ -1,0 +1,4 @@
+pytest
+# mypy
+# flake8
+# Note: torch and torchaudio are handled separately in the workflow for CPU installation.
