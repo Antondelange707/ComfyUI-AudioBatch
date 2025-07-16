@@ -41,3 +41,26 @@ repos:
             # "--check-hidden"
         ]
         # You can create a .codespellignore file with one word per line for words to ignore.
+
+
+# --- Use a "local" hook for mypy ---
+-   repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        # The command to execute. It's expected to be found in the PATH
+        # of the environment where you run `git commit`.
+        entry: mypy
+        args: ["--explicit-package-bases", "source/"]
+        # 'system' tells pre-commit to find the command in the current environment
+        # instead of building an isolated one.
+        language: system
+        # Specify which files to run on.
+        types: [python]
+        pass_filenames: false
+        # You might still need args if not configured elsewhere, but a mypy.ini is better.
+        # args: [--config-file=mypy.ini]
+        # `pass_filenames: false` can be useful here if you want mypy to analyze the
+        # whole project as configured in mypy.ini, rather than just the changed files.
+        # Try without it first.
+        # pass_filenames: false

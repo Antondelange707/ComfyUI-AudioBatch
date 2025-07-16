@@ -42,7 +42,7 @@ def get_peak_frequency(waveform: torch.Tensor, sample_rate: int) -> float:
     peak_index = torch.argmax(torch.abs(fft_result))
     # Get the frequency corresponding to that peak index
     peak_freq = freq_bins[peak_index].item()
-    return peak_freq
+    return float(peak_freq)
 
 
 # --- Test Cases ---

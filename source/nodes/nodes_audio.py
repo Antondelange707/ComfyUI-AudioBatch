@@ -7,6 +7,7 @@
 import torch
 import torchaudio
 import torchaudio.transforms as T
+from typing import Optional, Dict, Any
 from .utils.aligner import AudioBatchAligner
 from .utils.logger import main_logger
 from .utils.misc import parse_time_to_seconds, parse_note_to_frequency
@@ -429,7 +430,7 @@ class AudioBlend:
     UNIQUE_NAME = "SET_AudioBlend"
     DISPLAY_NAME = "Audio Blend"
 
-    def blend_audio(self, audio1: dict, gain1: float, gain2: float, audio2: dict = None):
+    def blend_audio(self, audio1: dict, gain1: float, gain2: float, audio2: Optional[Dict[str, Any]] = None):
         if audio2 is None:
             # Handle the simple case where audio2 is not provided
             logger.info(f"Blending audio1 only with gain {gain1}.")
@@ -609,6 +610,7 @@ class AudioTestSignalGenerator:
             waveform_multichannel = torch.zeros((batch_size, channels, num_samples))
 
         # Final clip to ensure [-1, 1] range, as some operations might exceed it slightly
+        assert waveform_multichannel is not None, "Waveform should have been created by now"
         final_waveform = torch.clamp(waveform_multichannel, -1.0, 1.0)
 
         logger.info(f"Generated '{waveform_type}' signal. Shape: {final_waveform.shape}, SR: {sample_rate}Hz")

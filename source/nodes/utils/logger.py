@@ -2,21 +2,28 @@
 # Copyright (c) 2025 Instituto Nacional de Tecnologïa Industrial
 # License: GPL-3.0
 # Project: ComfyUI-AudioBatch
+from __future__ import annotations  # Good practice
+import logging
 import os
 import sys
-import logging
+from typing import Any
 from .misc import NODES_NAME, NODES_DEBUG_VAR
 
-no_colorama = False
+
+# 1. Initialize variables with the `Any` type.
+#    This tells mypy not to make assumptions about their specific class.
+Fore: Any
+Back: Any
+Style: Any
+
+# 2. Perform the runtime import logic as before.
 try:
     from colorama import init as colorama_init, Fore, Back, Style
-except ImportError:
-    no_colorama = True
-# If colorama isn't installed use an ANSI basic replacement
-if no_colorama:
-    from .ansi import Fore, Back, Style  # noqa: F811
-else:
     colorama_init()
+except ImportError:
+    # If colorama is not available, import our fallback.
+    # mypy will now allow this assignment because the variables were declared as Any.
+    from .ansi import Fore, Back, Style
 
 
 class CustomFormatter(logging.Formatter):
