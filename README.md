@@ -16,6 +16,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [7. Audio Information](#7-audio-information)
   - [8. Audio Cut](#8-audio-cut)
   - [9. Audio Blend](#9-audio-blend)
+  - [10. Audio Test Signal Generator](#10-audio-test-signal-generator)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
@@ -157,6 +158,30 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `gain2` (FLOAT): Volume gain for the second audio. Can be negative to subtract.
    - **Output:**
      - `audio_out` (AUDIO): The blended audio.
+
+### 10. Audio Test Signal Generator
+   - **Display Name:** `Audio Test Signal Generator`
+   - **Internal Name:** `SET_AudioTestSignalGenerator`
+   - **Category:** `audio/generation`
+   - **Description:** Generates various standard audio test signals. This node is perfect for creating predictable, clean audio to test or debug other audio processing nodes in your workflow without needing external files.
+   - **Inputs:**
+     - `waveform_type` (COMBO): The type of signal to generate.
+       - **Periodic:** `sine`, `square`, `sawtooth`, `triangle`.
+       - **Sweep:** `sweep` (a linear frequency chirp from `frequency` to `frequency_end`).
+       - **Noise:** `white_noise`, `pink_noise`, `brownian_noise`.
+       - **Special:** `impulse` (a single sample at full amplitude), `silence` (a signal of all zeros, to which a DC offset can be added).
+     - `frequency` (FLOAT): The fundamental frequency in Hz for periodic waveforms, or the starting frequency for a sweep.
+     - `frequency_end` (FLOAT): The ending frequency in Hz, used only for the `sweep` waveform type.
+     - `amplitude` (FLOAT): The peak amplitude of the signal, from 0.0 to 1.0. This is ignored for `silence`.
+     - `dc_offset` (FLOAT): A constant value to add to the entire signal, shifting it up or down. For the `silence` type, this directly sets the signal's value.
+     - `phase` (FLOAT): A phase offset in degrees (0-360) for periodic waveforms.
+     - `duration` (STRING): The total duration of the audio. Supports seconds (`"5.5"`) or time format (`"HH:MM:SS.ss"`).
+     - `sample_rate` (INT): The sample rate for the output audio (e.g., 44100).
+     - `batch_size` (INT): The number of identical audio clips to generate in the output batch.
+     - `channels` (INT): The number of audio channels (1 for mono, 2 for stereo, etc.).
+     - `seed` (INT, optional): A seed for random number generation, ensuring that noise waveforms are reproducible.
+   - **Output:**
+     - `audio_out` (AUDIO): The generated test signal.
 
 ## &#x0001F680; Installation
 
