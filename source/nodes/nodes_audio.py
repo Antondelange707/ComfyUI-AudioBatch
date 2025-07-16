@@ -9,7 +9,7 @@ import torchaudio
 import torchaudio.transforms as T
 from .utils.aligner import AudioBatchAligner
 from .utils.logger import main_logger
-from .utils.misc import parse_time_to_seconds
+from .utils.misc import parse_time_to_seconds, parse_note_to_frequency
 
 logger = main_logger
 BASE_CATEGORY = "audio"
@@ -619,3 +619,43 @@ class AudioTestSignalGenerator:
         }
 
         return (output_audio,)
+
+
+class AudioMusicalNote:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "note": ("STRING", {
+                    "default": "A",
+                    "tooltip": "The musical note in American notation (e.g., C, F#, Gb, 'D sharp'). Case-insensitive."
+                }),
+                "octave": ("INT", {
+                    "default": 4,
+                    "min": 0,
+                    "max": 8,  # Standard piano range is roughly 0-8
+                    "step": 1,
+                    "tooltip": "The octave number (e.g., 4 corresponds to middle C's octave)."
+                }),
+            }
+        }
+
+    RETURN_TYPES = ("FLOAT",)
+    RETURN_NAMES = ("frequency",)
+    FUNCTION = "get_frequency"
+    CATEGORY = BASE_CATEGORY + "/" + GEN_CATEGORY
+    DESCRIPTION = "Converts a musical note and octave to its corresponding frequency in Hz."
+    UNIQUE_NAME = "SET_AudioMusicalNote"
+    DISPLAY_NAME = "Audio Musical Note"
+
+    def get_frequency(self, note: str, octave: int):
+        try:
+            frequency = parse_note_to_frequency(note, octave)
+            logger.info(f"Parsed note '{note}{octave}' to {frequency:.2f} Hz.")
+            return (frequency,)
+        except (ValueError, TypeError) as e:
+            # If the user enters an invalid note, log it as a warning
+            # and return a default safe frequency (e.g., A4) to avoid crashing.
+            # A UI warning could also be sent if this were a generator.
+            logger.error(f"Error parsing note: {e}. Defaulting to 440.0 Hz.")
+            return (440.0,)

@@ -17,6 +17,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [8. Audio Cut](#8-audio-cut)
   - [9. Audio Blend](#9-audio-blend)
   - [10. Audio Test Signal Generator](#10-audio-test-signal-generator)
+  - [11. Audio Musical Note](#11-audio-musical-note)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
@@ -183,6 +184,17 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Output:**
      - `audio_out` (AUDIO): The generated test signal.
 
+### 11. Audio Musical Note
+   - **Display Name:** `Audio Musical Note`
+   - **Internal Name:** `SET_AudioMusicalNote`
+   - **Category:** `audio/generation`
+   - **Description:** Converts a musical note (e.g., C#, Gb) and an octave into its corresponding frequency in Hz. This is perfect for accurately setting the frequency of the `Audio Test Signal Generator` node.
+   - **Inputs:**
+     - `note` (STRING): The musical note name. It's case-insensitive and flexible, accepting formats like `"C#"`, `"Db"`, `"g sharp"`, or `"a flat"`.
+     - `octave` (INT): The octave number for the note. Octave 4 is the standard middle range (containing A4=440Hz).
+   - **Output:**
+     - `frequency` (FLOAT): The calculated frequency of the note in Hz.
+
 ## &#x0001F680; Installation
 
 You can install the nodes from the ComfyUI nodes manager, the name is *Audio Batch*, or just do it manually:
@@ -212,6 +224,8 @@ Once installed the examples are available in the ComfyUI workflow templates, in 
   how to extract a single element from the batch.
 - [resample_force_stereo.json](example_workflows/resample_force_stereo.json): Shows how to change the number of channels
   and the sample rate.
+- [generate_and_blend.json](example_workflows/generate_and_blend.json): Shows how to generate four musical notes and blend
+  them together to create a chord.
 
 ## &#x0001F4DD; Usage Notes
 

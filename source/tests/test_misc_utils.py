@@ -4,8 +4,8 @@ Tests for miscellaneous utility functions found in utils/misc.py.
 import bootstrap  # noqa: F401
 import pytest
 
-# Import the function to be tested
-from nodes.utils.misc import parse_time_to_seconds
+# Import the functions to be tested
+from nodes.utils.misc import parse_note_to_frequency, parse_time_to_seconds
 
 
 # --- Test Cases for parse_time_to_seconds ---
@@ -87,3 +87,50 @@ def test_parse_time_non_string_input_raises_error():
 
     with pytest.raises(TypeError):
         parse_time_to_seconds({"time": "10"})  # Pass a dict
+
+
+# --- Test Cases for parse_note_to_frequency ---
+
+@pytest.mark.parametrize("note, octave, expected_freq", [
+    # Reference notes
+    ("A", 4, 440.0),      # A4 standard pitch
+    ("C", 4, 261.63),     # Middle C
+    ("C", 0, 16.35),      # Very low C
+
+    # Different notations
+    ("C#", 4, 277.18),    # C sharp
+    ("c sharp", 4, 277.18),  # C sharp with text
+    ("c  sharp", 4, 277.18),  # C sharp with extra space
+    ("Db", 4, 277.18),    # D flat (same as C#)
+    ("d flat", 4, 277.18),  # D flat with text
+    ("d      b", 4, 277.18),  # D flat with extra space
+
+    # Different octaves
+    ("A", 5, 880.0),      # One octave higher
+    ("A", 3, 220.0),      # One octave lower
+])
+def test_parse_note_valid_inputs(note, octave, expected_freq):
+    """Tests that valid note strings are parsed to the correct frequencies."""
+    assert parse_note_to_frequency(note, octave) == pytest.approx(expected_freq, rel=0.001)
+
+
+@pytest.mark.parametrize("invalid_note_str", [
+    "H",         # Not a valid note letter
+    "C##",       # Double sharp not supported by this simple parser
+    "Dbb",       # Double flat not supported
+    "A Sharps",  # Invalid text
+    "123",       # Not a note
+    "",          # Empty string
+])
+def test_parse_note_invalid_notes_raise_error(invalid_note_str):
+    """Tests that invalid note names raise ValueError."""
+    with pytest.raises(ValueError, match="Invalid note name"):
+        parse_note_to_frequency(invalid_note_str, 4)
+
+
+def test_parse_note_invalid_type_raises_error():
+    """Tests that non-string inputs raise TypeError."""
+    with pytest.raises(TypeError):
+        parse_note_to_frequency(123, 4)
+    with pytest.raises(TypeError):
+        parse_note_to_frequency(None, 4)

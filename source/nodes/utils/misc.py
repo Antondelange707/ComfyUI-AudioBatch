@@ -2,6 +2,7 @@
 # Copyright (c) 2025 Instituto Nacional de Tecnologïa Industrial
 # License: GPL-3.0
 # Project: ComfyUI-AudioBatch
+import re
 
 NODES_NAME = "AudioBatch"
 NODES_DEBUG_VAR = NODES_NAME.upper() + "_NODES_DEBUG"
@@ -65,3 +66,59 @@ def parse_time_to_seconds(time_str: str) -> float:
                          "Expected 'SECONDS', 'MM:SS.ss', or 'HH:MM:SS.ss'.") from e
     except RuntimeError as e:
         raise ValueError(str(e))
+
+
+# Reference frequency for A4, the standard tuning pitch
+A4_FREQ = 440.0
+NOTES = {
+    'c': -9, 'c#': -8, 'db': -8,
+    'd': -7, 'd#': -6, 'eb': -6,
+    'e': -5,
+    'f': -4, 'f#': -3, 'gb': -3,
+    'g': -2, 'g#': -1, 'ab': -1,
+    'a': 0,  'a#': 1,  'bb': 1,
+    'b': 2,
+}
+
+
+def parse_note_to_frequency(note_str: str, octave: int) -> float:
+    """
+    Parses a musical note string (e.g., `C#`, `A flat`, `db`) and an octave
+    to calculate its frequency in Hz.
+
+    Args:
+        note_str (str): The note name. Case-insensitive. Handles sharps (  #), flats (b),
+                        and text (`sharp`, `flat`).
+        octave (int): The octave number (e.g., 4 for middle C's octave).
+
+    Returns:
+        float: The frequency of the note in Hz.
+
+    Raises:
+        ValueError: If the note name is invalid.
+    """
+    if not isinstance(note_str, str):
+        raise TypeError("Note name must be a string.")
+
+    # Normalize the string: lowercase, remove "sharp" or "flat" text, remove spaces
+    processed_str = note_str.lower().strip()
+    processed_str = re.sub(r'\s*sharp\s*', '#', processed_str)
+    processed_str = re.sub(r'\s*flat\s*', 'b', processed_str)
+    processed_str = processed_str.replace(" ", "")
+
+    if processed_str not in NOTES:
+        raise ValueError(f"Invalid note name: '{note_str}'. Could not parse to a valid note.")
+
+    # Get the number of semitones away from A
+    semitone_offset_from_a = NOTES[processed_str]
+
+    # Calculate the number of semitones away from A4 (A in the 4th octave)
+    # The note "A" in octave 4 is our base (0 semitones from itself).
+    # The note "A" in octave 5 is 12 semitones higher.
+    # The note "C" in octave 4 is -9 semitones from A4.
+    n = semitone_offset_from_a + (octave - 4) * 12
+
+    # Apply the frequency formula: f = f_base * (2^(1/12))^n
+    frequency = A4_FREQ * (2**(1/12))**n
+
+    return frequency
