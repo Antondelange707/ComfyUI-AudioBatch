@@ -774,3 +774,69 @@ class AudioSplit2Channels:
         }
 
         return (audio_left, audio_right)
+
+
+class AudioConcatenate:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "audio1": ("AUDIO", {"tooltip": "The first audio clip (or batch)."}),
+                "audio2": ("AUDIO", {"tooltip": "The second audio clip (or batch) to append."}),
+            },
+        }
+
+    RETURN_TYPES = ("AUDIO",)
+    RETURN_NAMES = ("audio_out",)
+    FUNCTION = "concatenate_audio"
+    CATEGORY = BASE_CATEGORY + "/" + MANIPULATION_CATEGORY
+    DESCRIPTION = "Concatenates two audio signals end-to-end in time."
+    UNIQUE_NAME = "SET_AudioConcatenate"
+    DISPLAY_NAME = "Audio Concatenate"
+
+    def concatenate_audio(self, audio1: dict, audio2: dict):
+        # 1. Align the two audio inputs. This will unify their sample rate and channel count.
+        # It will also pad their *lengths* to be equal, which is not what we want for concatenation.
+        # We will use the aligned waveforms but ignore the padding by using their original lengths
+        # after resampling.
+
+        aligner = AudioBatchAligner(audio1, audio2)
+        # aligned_wf1 is (B1, C_target, N_target), aligned_wf2 is (B2, C_target, N_target)
+        aligned_wf1, aligned_wf2, target_sr = aligner.get_aligned_waveforms()
+
+        # 2. Determine the original lengths *after resampling* to know how much to take from each.
+        n1_orig = audio1['waveform'].shape[2]
+        n2_orig = audio2['waveform'].shape[2]
+        n1_after_resample = (n1_orig if audio1['sample_rate'] == target_sr else
+                             int(n1_orig * (target_sr / audio1['sample_rate'])))
+        n2_after_resample = (n2_orig if audio2['sample_rate'] == target_sr else
+                             int(n2_orig * (target_sr / audio2['sample_rate'])))
+
+        # Take the un-padded, aligned data from each waveform
+        wf1_to_concat = aligned_wf1[..., :n1_after_resample]
+        wf2_to_concat = aligned_wf2[..., :n2_after_resample]
+
+        # 3. Handle mismatched batch sizes by repeating the last item.
+        b1, b2 = wf1_to_concat.shape[0], wf2_to_concat.shape[0]
+        if b1 != b2:
+            if b1 < b2:
+                last_item = wf1_to_concat[-1:, :, :]  # Keep batch dim
+                repeats_needed = b2 - b1
+                wf1_to_concat = torch.cat([wf1_to_concat, last_item.repeat(repeats_needed, 1, 1)], dim=0)
+            else:  # b2 < b1
+                last_item = wf2_to_concat[-1:, :, :]
+                repeats_needed = b1 - b2
+                wf2_to_concat = torch.cat([wf2_to_concat, last_item.repeat(repeats_needed, 1, 1)], dim=0)
+
+        # Now both wf1_to_concat and wf2_to_concat are (max(B1,B2), C_target, N_relevant)
+
+        # 4. Concatenate along the time/samples dimension (dim=2)
+        concatenated_waveform = torch.cat((wf1_to_concat, wf2_to_concat), dim=2)
+
+        logger.info(f"Concatenated audio. Final shape: {concatenated_waveform.shape}, SR: {target_sr}")
+
+        output_audio = {
+            "waveform": concatenated_waveform,
+            "sample_rate": target_sr
+        }
+        return (output_audio,)

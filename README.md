@@ -15,11 +15,12 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [6. Audio Channel Conv and Resampler](#6-audio-channel-conv-and-resampler)
   - [7. Audio Information](#7-audio-information)
   - [8. Audio Cut](#8-audio-cut)
-  - [9. Audio Blend](#9-audio-blend)
-  - [10. Audio Test Signal Generator](#10-audio-test-signal-generator)
-  - [11. Audio Musical Note](#11-audio-musical-note)
-  - [12. Audio Join 2 Channels](#12-audio-join-2-channels)
-  - [13. Audio Split 2 Channels](#13-audio-split-2-channels)
+  - [9. Audio Concatenate](#8-audio-concatenate)
+  - [10. Audio Blend](#9-audio-blend)
+  - [11. Audio Test Signal Generator](#10-audio-test-signal-generator)
+  - [12. Audio Musical Note](#11-audio-musical-note)
+  - [13. Audio Join 2 Channels](#12-audio-join-2-channels)
+  - [14. Audio Split 2 Channels](#13-audio-split-2-channels)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
@@ -149,7 +150,21 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Output:**
      - `audio_out` (AUDIO): The selected portion of the audio.
 
-### 9. Audio Blend
+### 9. Audio Concatenate
+   - **Display Name:** `Audio Concatenate`
+   - **Internal Name:** `SET_AudioConcatenate`
+   - **Category:** `audio/manipulation`
+   - **Description:** Joins two audio clips end-to-end in time. This is the counterpart to the "Audio Cut" node.
+   - **Inputs:**
+     - `audio1` (AUDIO): The first audio clip to appear in the sequence.
+     - `audio2` (AUDIO): The second audio clip to be appended to the end of the first.
+   - **Output:**
+     - `audio_out` (AUDIO): A single audio clip containing `audio1` followed immediately by `audio2`.
+   - **Behavior Details:**
+     - **Alignment:** Before concatenation, the two audio inputs are aligned to have the same sample rate and channel count, using the same logic as the "Batch Audios" node.
+     - **Batch Handling:** If the inputs have different batch sizes, the last item of the shorter batch is repeated to ensure the output batch size matches the larger of the two inputs.
+
+### 10. Audio Blend
    - **Display Name:** `Audio Blend`
    - **Internal Name:** `SET_AudioBlend`
    - **Category:** `audio/manipulation`
@@ -162,7 +177,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Output:**
      - `audio_out` (AUDIO): The blended audio.
 
-### 10. Audio Test Signal Generator
+### 11. Audio Test Signal Generator
    - **Display Name:** `Audio Test Signal Generator`
    - **Internal Name:** `SET_AudioTestSignalGenerator`
    - **Category:** `audio/generation`
@@ -186,7 +201,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Output:**
      - `audio_out` (AUDIO): The generated test signal.
 
-### 11. Audio Musical Note
+### 12. Audio Musical Note
    - **Display Name:** `Audio Musical Note`
    - **Internal Name:** `SET_AudioMusicalNote`
    - **Category:** `audio/generation`
@@ -197,7 +212,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Output:**
      - `frequency` (FLOAT): The calculated frequency of the note in Hz.
 
-### 12. Audio Join 2 Channels
+### 13. Audio Join 2 Channels
    - **Display Name:** `Audio Join 2 Channels`
    - **Internal Name:** `SET_AudioJoin2Channels`
    - **Category:** `audio/manipulation`
@@ -212,7 +227,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - **Alignment:** The two mono signals are then aligned to have the same sample rate and length, using the same logic as the "Batch Audios" node (resamples to match `audio_left`'s SR, pads to match the longest duration).
      - **Batch Handling:** If the inputs have different batch sizes, the last item of the shorter batch is repeated to match the length of the longer batch.
 
-### 13. Audio Split 2 Channels
+### 14. Audio Split 2 Channels
    - **Display Name:** `Audio Split 2 Channels`
    - **Internal Name:** `SET_AudioSplit2Channels`
    - **Category:** `audio/manipulation`
@@ -254,6 +269,7 @@ Once installed the examples are available in the ComfyUI workflow templates, in 
   and the sample rate.
 - [generate_and_blend.json](example_workflows/generate_and_blend.json): Shows how to generate four musical notes and blend
   them together to create a chord.
+- [cut_and_concat.json](example_workflows/cut_and_concat.json): Shows how to cut and concatenate audio.
 
 ## &#x0001F4DD; Usage Notes
 
