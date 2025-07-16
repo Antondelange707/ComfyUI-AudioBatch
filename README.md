@@ -18,6 +18,8 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [9. Audio Blend](#9-audio-blend)
   - [10. Audio Test Signal Generator](#10-audio-test-signal-generator)
   - [11. Audio Musical Note](#11-audio-musical-note)
+  - [12. Audio Join 2 Channels](#12-audio-join-2-channels)
+  - [13. Audio Split 2 Channels](#13-audio-split-2-channels)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
@@ -194,6 +196,32 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `octave` (INT): The octave number for the note. Octave 4 is the standard middle range (containing A4=440Hz).
    - **Output:**
      - `frequency` (FLOAT): The calculated frequency of the note in Hz.
+
+### 12. Audio Join 2 Channels
+   - **Display Name:** `Audio Join 2 Channels`
+   - **Internal Name:** `SET_AudioJoin2Channels`
+   - **Category:** `audio/manipulation`
+   - **Description:** Combines two separate audio inputs into a single stereo audio output, treating the first input as the left channel and the second as the right. It intelligently handles misaligned inputs.
+   - **Inputs:**
+     - `audio_left` (AUDIO): The audio signal for the left channel. If it's stereo or multi-channel, it will be automatically converted to mono before being used.
+     - `audio_right` (AUDIO): The audio signal for the right channel. Will also be converted to mono.
+   - **Output:**
+     - `audio_out` (AUDIO): A stereo audio signal.
+   - **Behavior Details:**
+     - **Channel Conversion:** Both `audio_left` and `audio_right` are first forced into mono to ensure they each represent a single channel stream.
+     - **Alignment:** The two mono signals are then aligned to have the same sample rate and length, using the same logic as the "Batch Audios" node (resamples to match `audio_left`'s SR, pads to match the longest duration).
+     - **Batch Handling:** If the inputs have different batch sizes, the last item of the shorter batch is repeated to match the length of the longer batch.
+
+### 13. Audio Split 2 Channels
+   - **Display Name:** `Audio Split 2 Channels`
+   - **Internal Name:** `SET_AudioSplit2Channels`
+   - **Category:** `audio/manipulation`
+   - **Description:** Takes a stereo audio input and separates it into two mono audio outputs, one for the left channel and one for the right.
+   - **Inputs:**
+     - `audio` (AUDIO): The stereo audio signal to be split. **The node will raise an error if the input is not 2-channel stereo.**
+   - **Outputs:**
+     - `audio_left` (AUDIO): A mono audio signal containing only the left channel data.
+     - `audio_right` (AUDIO): A mono audio signal containing only the right channel data.
 
 ## &#x0001F680; Installation
 

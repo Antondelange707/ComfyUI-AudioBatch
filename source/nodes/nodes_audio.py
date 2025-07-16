@@ -659,3 +659,118 @@ class AudioMusicalNote:
             # A UI warning could also be sent if this were a generator.
             logger.error(f"Error parsing note: {e}. Defaulting to 440.0 Hz.")
             return (440.0,)
+
+
+class AudioJoin2Channels:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "audio_left": ("AUDIO", {"tooltip": "The audio signal for the left channel. Will be converted to mono."}),
+                "audio_right": ("AUDIO", {"tooltip": "The audio signal for the right channel. Will be converted to mono."}),
+            },
+        }
+
+    RETURN_TYPES = ("AUDIO",)
+    RETURN_NAMES = ("audio_out",)
+    FUNCTION = "join_channels"
+    CATEGORY = BASE_CATEGORY + "/" + MANIPULATION_CATEGORY
+    DESCRIPTION = "Joins two audio signals (L/R) into a single stereo audio signal."
+    UNIQUE_NAME = "SET_AudioJoin2Channels"
+    DISPLAY_NAME = "Audio Join 2 Channels"
+
+    def join_channels(self, audio_left: dict, audio_right: dict):
+        # 1. Force both inputs to be mono to ensure they represent single channels.
+        # We reuse the logic from AudioChannelConverter.
+        channel_converter = AudioChannelConverter()
+        (mono_left_audio,) = channel_converter.convert_channels(audio_left, "force_mono")
+        (mono_right_audio,) = channel_converter.convert_channels(audio_right, "force_mono")
+
+        # 2. Align the two mono signals in terms of sample rate and length.
+        # This reuses the robust logic from AudioBatchAligner.
+        # The output of the aligner will have channels=1 since both inputs are mono.
+        aligner = AudioBatchAligner(mono_left_audio, mono_right_audio)
+        aligned_left_wf, aligned_right_wf, target_sr = aligner.get_aligned_waveforms()
+
+        # aligned_left_wf is (B_left, 1, N), aligned_right_wf is (B_right, 1, N)
+
+        # 3. Handle mismatched batch sizes.
+        b_left, b_right = aligned_left_wf.shape[0], aligned_right_wf.shape[0]
+        target_batch_size = max(b_left, b_right)
+
+        # Create final waveforms with the target batch size, repeating the last item if needed.
+        final_left_wf = aligned_left_wf
+        if b_left < target_batch_size:
+            last_left_item = aligned_left_wf[-1:, :, :]  # (1, 1, N)
+            repeats_needed = target_batch_size - b_left
+            final_left_wf = torch.cat([aligned_left_wf, last_left_item.repeat(repeats_needed, 1, 1)], dim=0)
+
+        final_right_wf = aligned_right_wf
+        if b_right < target_batch_size:
+            last_right_item = aligned_right_wf[-1:, :, :]  # (1, 1, N)
+            repeats_needed = target_batch_size - b_right
+            final_right_wf = torch.cat([aligned_right_wf, last_right_item.repeat(repeats_needed, 1, 1)], dim=0)
+
+        # At this point, final_left_wf and final_right_wf are both (target_batch_size, 1, N)
+
+        # 4. Concatenate the mono channels into a stereo signal.
+        # `torch.cat` along the channel dimension (dim=1).
+        stereo_waveform = torch.cat((final_left_wf, final_right_wf), dim=1)  # (B, 2, N)
+
+        logger.info(f"Joined L/R channels into stereo audio. Final shape: {stereo_waveform.shape}, SR: {target_sr}")
+
+        output_audio = {
+            "waveform": stereo_waveform,
+            "sample_rate": target_sr
+        }
+        return (output_audio,)
+
+
+class AudioSplit2Channels:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "audio": ("AUDIO", {"tooltip": "A stereo audio signal to split into separate channels."}),
+            },
+        }
+
+    RETURN_TYPES = ("AUDIO", "AUDIO")
+    RETURN_NAMES = ("audio_left", "audio_right")
+    FUNCTION = "split_channels"
+    CATEGORY = BASE_CATEGORY + "/" + MANIPULATION_CATEGORY
+    DESCRIPTION = "Splits a stereo audio signal into two separate mono audio signals (L/R)."
+    UNIQUE_NAME = "SET_AudioSplit2Channels"
+    DISPLAY_NAME = "Audio Split 2 Channels"
+
+    def split_channels(self, audio: dict):
+        waveform = audio['waveform']  # (B, C, N)
+        sample_rate = audio['sample_rate']
+
+        num_channels = waveform.shape[1]
+
+        # 1. Validate that the input is stereo.
+        if num_channels != 2:
+            msg = f"Input audio must be stereo (2 channels) to be split. Got {num_channels} channels."
+            logger.error(msg)
+            # This is a hard requirement, so raising an error is appropriate.
+            raise ValueError(msg)
+
+        # 2. Slice the tensor along the channel dimension.
+        # Slicing with [:, 0:1, :] keeps the channel dimension as 1, so the output is (B, 1, N)
+        left_channel_wf = waveform[:, 0:1, :]
+        right_channel_wf = waveform[:, 1:2, :]
+
+        logger.info(f"Split stereo audio into L/R channels. Output shape for each: {left_channel_wf.shape}")
+
+        # 3. Package each channel into its own ComfyUI AUDIO dict.
+        audio_left = {
+            "waveform": left_channel_wf,
+            "sample_rate": sample_rate
+        }
+        audio_right = {
+            "waveform": right_channel_wf,
+            "sample_rate": sample_rate
+        }
+
+        return (audio_left, audio_right)
