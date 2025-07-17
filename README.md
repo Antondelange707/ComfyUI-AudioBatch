@@ -155,6 +155,9 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `channels` (INT): Number of audio channels (1 mono, 2 stereo)
      - `num_samples` (INT): How many samples contains the audio. Duratio [s] = `num_samples` / `sample_rate`
      - `sample_rate` (INT): Sampling frequency, how many samples per second.
+     - `mean` (TORCH_TENSOR): Mean value for each waveform in the batch.
+     - `std` (TORCH_TENSOR): Standard deviation for each waveform in the batch.
+     - `peak` (TORCH_TENSOR): Peak value (absolute) for each waveform in the batch.
 
 ### 8. Audio Cut
    - **Display Name:** `Audio Cut`

@@ -372,8 +372,8 @@ class AudioInfo:
             },
         }
 
-    RETURN_TYPES = ("AUDIO", "INT", "INT", "INT", "INT")
-    RETURN_NAMES = ("audio_bypass", "batch_size", "channels", "num_samples", "sample_rate")
+    RETURN_TYPES = ("AUDIO", "INT", "INT", "INT", "INT", "TORCH_TENSOR", "TORCH_TENSOR", "TORCH_TENSOR")
+    RETURN_NAMES = ("audio_bypass", "batch_size", "channels", "num_samples", "sample_rate", "mean", "std", "peak")
     FUNCTION = "show_info"
     CATEGORY = BASE_CATEGORY + "/" + CONV_CATEGORY
     DESCRIPTION = "Shows information about the audio."
@@ -383,7 +383,15 @@ class AudioInfo:
     def show_info(self, audio: dict):
         wav = audio['waveform']  # (B, C, T)
         sample_rate = audio['sample_rate']
-        return audio, wav.shape[0], wav.shape[1], wav.shape[2], sample_rate
+
+        ref = wav.mean(1, keepdim=True)
+        mean = ref.mean(dim=2, keepdim=True)
+        std = ref.std(dim=2, keepdim=True)
+
+        max_val, _ = torch.max(torch.abs(wav), dim=2, keepdim=True)
+        max_val, _ = torch.max(max_val, dim=1, keepdim=True)  # (B, 1, 1)
+
+        return audio, wav.shape[0], wav.shape[1], wav.shape[2], sample_rate, mean.squeeze(), std.squeeze(), max_val.squeeze()
 
 
 class AudioForceChannels:
