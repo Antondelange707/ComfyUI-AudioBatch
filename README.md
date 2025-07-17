@@ -84,6 +84,12 @@ workflows, especially when dealing with multiple audio inputs or outputs.
          - If input is mono, converts to "fake stereo".
          - If input is stereo, no change.
          - If input has more than 2 channels, it takes the first channel and duplicates it to create stereo.
+     - `downmix_method` (COMBO): How to convert to mono.
+       - `average`: Simple average ((L+R)/2). Can reduce volume.
+       - `standard_gain` (default): Sums channels with -3dB gain (0.707). Better preserves perceived loudness.
+       - `spectral`: Averages frequency magnitudes to prevent phase cancellation.
+     - `n_fft` (INT, optional): FFT size for spectral downmixing. Higher values give better frequency resolution but worse time resolution.
+     - `hop_length` (INT, optional): Hop length for STFT. Typically n_fft / 4. Controls time resolution.
    - **Output:**
      - `audio_out` (AUDIO): The audio with the converted channel layout. The batch size and sample rate are preserved.
 
@@ -98,6 +104,12 @@ workflows, especially when dealing with multiple audio inputs or outputs.
        - `0`: `keep`
        - `1`: `force_mono`
        - `2`: `force_stereo`
+     - `downmix_method` (COMBO): How to convert to mono.
+       - `average`: Simple average ((L+R)/2). Can reduce volume.
+       - `standard_gain` (default): Sums channels with -3dB gain (0.707). Better preserves perceived loudness.
+       - `spectral`: Averages frequency magnitudes to prevent phase cancellation.
+     - `n_fft` (INT, optional): FFT size for spectral downmixing. Higher values give better frequency resolution but worse time resolution.
+     - `hop_length` (INT, optional): Hop length for STFT. Typically n_fft / 4. Controls time resolution.
    - **Output:**
      - `audio` (AUDIO): The audio with the converted channel layout. The batch size and sample rate are preserved.
 
@@ -121,6 +133,12 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `audio` (AUDIO): The input audio.
      - `channel_conversion` (COMBO): Same options as the "Audio Channel Converter" node.
      - `target_sample_rate` (INT): Same options as the "Audio Resampler" node.
+     - `downmix_method` (COMBO): How to convert to mono.
+       - `average`: Simple average ((L+R)/2). Can reduce volume.
+       - `standard_gain` (default): Sums channels with -3dB gain (0.707). Better preserves perceived loudness.
+       - `spectral`: Averages frequency magnitudes to prevent phase cancellation.
+     - `n_fft` (INT, optional): FFT size for spectral downmixing. Higher values give better frequency resolution but worse time resolution.
+     - `hop_length` (INT, optional): Hop length for STFT. Typically n_fft / 4. Controls time resolution.
    - **Output:**
      - `audio_out` (AUDIO): The audio after both channel conversion and resampling have been applied.
 
@@ -223,7 +241,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Output:**
      - `audio_out` (AUDIO): A stereo audio signal.
    - **Behavior Details:**
-     - **Channel Conversion:** Both `audio_left` and `audio_right` are first forced into mono to ensure they each represent a single channel stream.
+     - **Channel Conversion:** Both `audio_left` and `audio_right` are first forced into mono to ensure they each represent a single channel stream. Note that `average` method is used, do it manually to select another mechanism.
      - **Alignment:** The two mono signals are then aligned to have the same sample rate and length, using the same logic as the "Batch Audios" node (resamples to match `audio_left`'s SR, pads to match the longest duration).
      - **Batch Handling:** If the inputs have different batch sizes, the last item of the shorter batch is repeated to match the length of the longer batch.
 

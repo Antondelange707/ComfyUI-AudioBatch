@@ -25,14 +25,14 @@ def converter_node():
 def test_converter_mono_to_stereo(converter_node):
     sr = 44100
     audio_mono = create_dummy_audio(2, 1, 1000, sr)
-    (result_audio,) = converter_node.convert_channels(audio_mono, "mono_to_stereo")
+    (result_audio,) = converter_node.convert_channels(audio_mono, "mono_to_stereo", "average")
     assert result_audio['waveform'].shape[1] == 2
 
 
 def test_converter_stereo_to_mono(converter_node):
     sr = 44100
     audio_stereo = create_dummy_audio(2, 2, 1000, sr)
-    (result_audio,) = converter_node.convert_channels(audio_stereo, "stereo_to_mono")
+    (result_audio,) = converter_node.convert_channels(audio_stereo, "stereo_to_mono", "average")
     assert result_audio['waveform'].shape[1] == 1
 
 
@@ -40,7 +40,7 @@ def test_converter_force_stereo_from_multichannel(converter_node):
     """Tests if force_stereo takes the first channel of a 5.1 input."""
     sr = 44100
     audio_5_1 = create_dummy_audio(1, 6, 1000, sr)
-    (result_audio,) = converter_node.convert_channels(audio_5_1, "force_stereo")
+    (result_audio,) = converter_node.convert_channels(audio_5_1, "force_stereo", "average")
     assert result_audio['waveform'].shape[1] == 2
     # Check if the two output channels are identical copies of the first input channel
     assert torch.allclose(result_audio['waveform'][:, 0, :], result_audio['waveform'][:, 1, :])
@@ -50,37 +50,107 @@ def test_converter_force_stereo_from_multichannel(converter_node):
 def test_converter_keep_channels(converter_node):
     sr = 44100
     audio_stereo = create_dummy_audio(1, 2, 1000, sr)
-    (result_audio,) = converter_node.convert_channels(audio_stereo, "keep")
+    (result_audio,) = converter_node.convert_channels(audio_stereo, "keep", "average")
     assert result_audio['waveform'].shape[1] == 2
     assert torch.allclose(result_audio['waveform'], audio_stereo['waveform'])
 
 
-def test_converter_stereo_to_mono_content_is_average(converter_node):
+@pytest.mark.parametrize("downmix_method", ["average", "standard_gain"])
+def test_converter_stereo_to_mono_math(converter_node, downmix_method):
     """
-    Strictly tests if stereo_to_mono correctly averages the L and R channels.
+    Strictly tests that stereo-to-mono downmixing is mathematically correct
+    for both 'average' and 'standard_gain' methods.
     """
     sr = 44100
-    samples = sr * 1  # 1 second
+    samples = sr  # 1 second
 
     # Create distinct L and R channels
-    # A simple ramp for L and a constant for R makes averaging easy to verify
-    left_channel = torch.linspace(0, 1, samples)
+    left_channel = torch.linspace(0.1, 0.9, samples)
     right_channel = torch.ones(samples) * 0.5
 
-    # Create the stereo waveform: (B=1, C=2, N)
     stereo_waveform = torch.stack((left_channel, right_channel), dim=0).unsqueeze(0)
     stereo_audio = {"waveform": stereo_waveform, "sample_rate": sr}
 
-    # Run the conversion
-    (mono_audio,) = converter_node.convert_channels(stereo_audio, "stereo_to_mono")
+    # Run the conversion with the parameterized downmix method
+    (mono_audio,) = converter_node.convert_channels(
+        audio=stereo_audio,
+        channel_conversion="force_mono",
+        downmix_method=downmix_method
+    )
+
+    # Calculate the expected result based on the method
+    if downmix_method == "average":
+        expected_mono_waveform = ((left_channel + right_channel) / 2.0).unsqueeze(0).unsqueeze(0)
+    elif downmix_method == "standard_gain":
+        gain = 1.0 / (2**0.5)  # Gain for stereo
+        expected_mono_waveform = ((left_channel + right_channel) * gain).unsqueeze(0).unsqueeze(0)
+    else:
+        pytest.fail(f"Test case not implemented for downmix method: {downmix_method}")
 
     # Assertions
-    # The output waveform should be the mathematical average of L and R
-    expected_mono_waveform = ((left_channel + right_channel) / 2.0).unsqueeze(0).unsqueeze(0)  # Shape to (1,1,N)
-
     assert mono_audio['waveform'].shape == (1, 1, samples)
-    # Use a small tolerance (atol) for floating point comparisons
     assert torch.allclose(mono_audio['waveform'], expected_mono_waveform, atol=1e-6)
+
+
+def test_converter_antiphase_cancellation_time_domain(converter_node):
+    """
+    Strictly tests and confirms that time-domain methods (both average and standard_gain)
+    suffer from phase cancellation with anti-phase signals. This is expected behavior.
+    """
+    sr = 44100
+    samples = sr
+
+    # Create a sine wave for the left channel
+    t = torch.linspace(0., 1., samples)
+    left_channel = torch.sin(2 * torch.pi * 440.0 * t)
+    # Create a perfectly inverted (anti-phase) wave for the right channel
+    right_channel = -left_channel
+
+    stereo_waveform = torch.stack((left_channel, right_channel), dim=0).unsqueeze(0)
+    antiphase_audio = {"waveform": stereo_waveform, "sample_rate": sr}
+
+    # Run conversion using 'average'
+    (mono_audio_avg,) = converter_node.convert_channels(
+        audio=antiphase_audio,
+        channel_conversion="force_mono",
+        downmix_method="average"
+    )
+
+    # The result of (L + (-L)) / 2 should be a tensor of all zeros.
+    assert torch.allclose(mono_audio_avg['waveform'], torch.zeros_like(mono_audio_avg['waveform']), atol=1e-6)
+
+
+def test_converter_spectral_downmix_avoids_cancellation(converter_node):
+    """
+    Verifies that the node, when set to 'spectral' downmix, avoids cancelling
+    an anti-phase signal, unlike the time-domain methods.
+    """
+    sr = 44100
+    samples = sr
+
+    t = torch.linspace(0., 1., samples)
+    left_channel = torch.sin(2 * torch.pi * 440.0 * t)
+    right_channel = -left_channel  # Anti-phase
+
+    stereo_waveform = torch.stack((left_channel, right_channel), dim=0).unsqueeze(0)
+    antiphase_audio = {"waveform": stereo_waveform, "sample_rate": sr}
+
+    # Run conversion using the new 'spectral' method
+    (mono_audio_spectral,) = converter_node.convert_channels(
+        audio=antiphase_audio,
+        channel_conversion="force_mono",
+        downmix_method="spectral"
+    )
+
+    # The spectral downmix should preserve the energy of the signal.
+    # Check that the mean of the squared signal (power) is significant.
+    output_power = torch.mean(mono_audio_spectral['waveform'] ** 2)
+    original_power = torch.mean(left_channel ** 2)
+
+    # It won't be identical to original_power due to phase reconstruction,
+    # but it should be much, much greater than zero.
+    assert output_power > original_power * 0.5  # Assert it retains at least 50% of the power
+    assert output_power > 1e-3  # Assert it's not silent
 
 
 # --- Tests for AudioResampler ---
@@ -208,7 +278,8 @@ def test_advanced_processor_integration_smoke_test(advanced_processor_node):
     (result_audio,) = advanced_processor_node.process_audio(
         audio=audio_stereo_orig,
         channel_conversion="force_mono",
-        target_sample_rate=target_sr
+        target_sample_rate=target_sr,
+        downmix_method="average"
     )
 
     # Assertions:

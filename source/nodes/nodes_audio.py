@@ -11,6 +11,7 @@ from typing import Optional, Dict, Any
 from .utils.aligner import AudioBatchAligner
 from .utils.logger import main_logger
 from .utils.misc import parse_time_to_seconds, parse_note_to_frequency
+from .utils.downmix import spectral_downmix
 
 logger = main_logger
 BASE_CATEGORY = "audio"
@@ -18,6 +19,28 @@ BATCH_CATEGORY = "batch"
 CONV_CATEGORY = "conversion"
 MANIPULATION_CATEGORY = "manipulation"
 GEN_CATEGORY = "generation"
+DOWNMIX_OPTIONS = (["average", "standard_gain", "spectral"],
+                   {"default": "standard_gain",
+                    "tooltip": ("Method for stereo/multi-channel to mono conversion:\n"
+                                "- average: Simple average ((L+R)/2). Can reduce volume.\n"
+                                "- standard_gain: Sums channels with -3dB gain (0.707). "
+                                "Better preserves perceived loudness."
+                                "- spectral: Averages frequency magnitudes to prevent phase cancellation.")})
+DOWNMIX_NFFT = ("INT", {
+                  "default": 2048,
+                  "min": 256,
+                  "max": 8192,  # Powers of 2 are typical
+                  "step": 256,
+                  "tooltip": ("FFT size for spectral downmixing. "
+                              "Higher values give better frequency resolution but worse time resolution.")
+               })
+DOWNMIX_HOP = ("INT", {
+                  "default": 512,
+                  "min": 64,
+                  "max": 4096,
+                  "step": 64,
+                  "tooltip": "Hop length for STFT. Typically n_fft / 4. Controls time resolution."
+              })
 
 
 class AudioBatch:
@@ -156,7 +179,12 @@ class AudioChannelConverter:
                                         "tooltip": "keep: maintain same channels,\n"
                                                    "stereo_to_mono/force_mono: 1 channel,\n"
                                                    "mono_to_stereo/force_stereo: 2 channels"}),
+                "downmix_method": DOWNMIX_OPTIONS,
             },
+            "optional": {
+                "n_fft": DOWNMIX_NFFT,
+                "hop_length": DOWNMIX_HOP,
+            }
         }
 
     RETURN_TYPES = ("AUDIO",)
@@ -167,7 +195,8 @@ class AudioChannelConverter:
     UNIQUE_NAME = "SET_AudioChannelConverter"
     DISPLAY_NAME = "Audio Channel Converter"
 
-    def convert_channels(self, audio: dict, channel_conversion: str):
+    def convert_channels(self, audio: dict, channel_conversion: str, downmix_method: str, n_fft: int = 2048,
+                         hop_length: int = 512):
         waveform = audio['waveform']  # (B, C, T)
         sample_rate = audio['sample_rate']
 
@@ -192,10 +221,22 @@ class AudioChannelConverter:
                 if original_channels > 2 and channel_conversion == "stereo_to_mono":
                     logger.warning(f"Channel mode 'stereo_to_mono': Input has {original_channels} channels. "
                                    "Averaging all to mono.")
-                elif channel_conversion == "force_mono":
-                    logger.info(f"Channel mode 'force_mono': Input has {original_channels} channels. Averaging all to mono.")
-                # Average across the channel dimension (dim=1)
-                output_waveform = torch.mean(waveform, dim=1, keepdim=True)
+                logger.info(f"Converting {original_channels} channels to mono using '{downmix_method}' method.")
+
+                if downmix_method == "average":
+                    # Simple average across the channel dimension
+                    output_waveform = torch.mean(waveform, dim=1, keepdim=True)
+                elif downmix_method == "standard_gain":
+                    # Sum channels and apply gain compensation.
+                    # This is equivalent to (L*0.707 + R*0.707) for stereo.
+                    # For multi-channel, it sums all channels and divides by sqrt(num_channels).
+                    gain = 1.0 / (original_channels ** 0.5)
+                    logger.debug(f"Applying downmix gain of {gain:.4f} (1/sqrt({original_channels}))")
+                    # Sum along channel dimension, then apply gain. keepdim=True for (B,1,N) shape.
+                    output_waveform = torch.sum(waveform, dim=1, keepdim=True) * gain
+                elif downmix_method == "spectral":
+                    output_waveform = spectral_downmix(waveform, n_fft=n_fft, hop_length=hop_length)
+
                 logger.debug(f"Converted to mono. New shape: {output_waveform.shape}")
 
         elif channel_conversion == "mono_to_stereo" or channel_conversion == "force_stereo":
@@ -291,7 +332,12 @@ class AudioProcessAdvanced:
                                                    "mono_to_stereo/force_stereo: 2 channels"}),
                 "target_sample_rate": ("INT", {"default": 0, "min": 0, "max": 192000, "step": 100.,
                                                "tooltip": "Output sample rate, 0 is same as input"}),
+                "downmix_method": DOWNMIX_OPTIONS,
             },
+            "optional": {
+                "n_fft": DOWNMIX_NFFT,
+                "hop_length": DOWNMIX_HOP,
+            }
         }
     RETURN_TYPES = ("AUDIO",)
     RETURN_NAMES = ("audio_out",)
@@ -301,13 +347,15 @@ class AudioProcessAdvanced:
     UNIQUE_NAME = "SET_AudioChannelConvResampler"
     DISPLAY_NAME = "Audio Channel Conv and Resampler"
 
-    def process_audio(self, audio: dict, channel_conversion: str, target_sample_rate: int):
+    def process_audio(self, audio: dict, channel_conversion: str, target_sample_rate: int, downmix_method: str,
+                      n_fft: int = 2048, hop_length: int = 512):
         # Instantiate helper classes (or move their logic directly here)
         channel_converter_node = AudioChannelConverter()
         resampler_node = AudioResampler()
 
         # 1. Channel Conversion
-        (audio_after_channels,) = channel_converter_node.convert_channels(audio, channel_conversion)
+        (audio_after_channels,) = channel_converter_node.convert_channels(audio, channel_conversion, downmix_method,
+                                                                          n_fft=n_fft, hop_length=hop_length)
 
         # 2. Resampling
         (audio_after_resample,) = resampler_node.resample_audio(audio_after_channels, target_sample_rate)
@@ -345,7 +393,12 @@ class AudioForceChannels:
             "required": {
                 "audio": ("AUDIO",),
                 "channels": ("INT", {"default": 0, "min": 0, "max": 2}),
+                "downmix_method": DOWNMIX_OPTIONS,
             },
+            "optional": {
+                "n_fft": DOWNMIX_NFFT,
+                "hop_length": DOWNMIX_HOP,
+            }
         }
 
     RETURN_TYPES = ("AUDIO",)
@@ -357,8 +410,9 @@ class AudioForceChannels:
     DISPLAY_NAME = "Audio Force Channels"
     CHANNELS_TO_MODE = ["keep", "force_mono", "force_stereo"]
 
-    def force_channels(self, audio: dict, channels: int):
-        return AudioChannelConverter().convert_channels(audio, self.CHANNELS_TO_MODE[channels])
+    def force_channels(self, audio: dict, channels: int, downmix_method: str, n_fft: int = 2048, hop_length: int = 512):
+        return AudioChannelConverter().convert_channels(audio, self.CHANNELS_TO_MODE[channels], downmix_method, n_fft=n_fft,
+                                                        hop_length=hop_length)
 
 
 class AudioCut:
@@ -685,8 +739,8 @@ class AudioJoin2Channels:
         # 1. Force both inputs to be mono to ensure they represent single channels.
         # We reuse the logic from AudioChannelConverter.
         channel_converter = AudioChannelConverter()
-        (mono_left_audio,) = channel_converter.convert_channels(audio_left, "force_mono")
-        (mono_right_audio,) = channel_converter.convert_channels(audio_right, "force_mono")
+        (mono_left_audio,) = channel_converter.convert_channels(audio_left, "force_mono", "average")
+        (mono_right_audio,) = channel_converter.convert_channels(audio_right, "force_mono", "average")
 
         # 2. Align the two mono signals in terms of sample rate and length.
         # This reuses the robust logic from AudioBatchAligner.
