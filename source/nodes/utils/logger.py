@@ -6,8 +6,9 @@ from __future__ import annotations  # Good practice
 import logging
 import os
 import sys
-from typing import Any
+from typing import Any, Callable
 from .misc import NODES_NAME, NODES_DEBUG_VAR
+from .comfy_notification import send_toast_notification
 
 
 # 1. Initialize variables with the `Any` type.
@@ -56,9 +57,55 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
+def on_log_error_or_warning(record: logging.LogRecord) -> None:
+    """
+    This function is called whenever a log with level WARNING or higher is emitted.
+    The 'record' object contains all information about the log event.
+    """
+    if record.levelno == logging.WARNING:
+        summary = "Warning"
+        severity = "warn"
+    else:
+        summary = "Error"
+        severity = "error"
+    send_toast_notification(record.getMessage(), summary=summary, severity=severity)
+
+
+class WarningAndErrorFilter(logging.Filter):
+    """
+    A custom log filter that intercepts logs of a certain level.
+    """
+    def __init__(self, callback: Callable, level: int = logging.WARNING):
+        """
+        Initializes the filter.
+
+        Args:
+            callback: The function to call when a log record meets the level criteria.
+            level: The minimum level to trigger the callback.
+        """
+        super().__init__()
+        self._callback = callback
+        self._level = level
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        """
+        This method is called for every log record.
+        """
+        # Check if the log level is WARNING or higher
+        if record.levelno >= self._level:
+            self._callback(record)
+
+        # Always return True to ensure the log is always processed
+        # by the handlers after this filter.
+        return True
+
+
 # Create a new logger
 logger = logging.getLogger(NODES_NAME)
 logger.propagate = False
+
+# Add the custom filter to the logger.
+logger.addFilter(WarningAndErrorFilter(callback=on_log_error_or_warning))
 
 # Add handler if we don't have one.
 if not logger.handlers:

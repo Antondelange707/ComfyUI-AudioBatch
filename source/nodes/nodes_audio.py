@@ -14,6 +14,7 @@ from .utils.logger import main_logger
 from .utils.misc import parse_time_to_seconds, parse_note_to_frequency
 from .utils.downmix import spectral_downmix
 from .utils.downloader import download_model
+from .utils.comfy_notification import send_toast_notification
 try:
     from folder_paths import get_input_directory   # To get the ComfyUI input directory
 except ModuleNotFoundError:
@@ -1083,13 +1084,14 @@ class AudioDownload:
             if not base_url.endswith('/'):
                 base_url += '/'
             download_url = base_url + filename
+            send_toast_notification(f"Downloading `{filename}`", "Download")
 
-            # --- Use your existing download_model function ---
             try:
                 download_model(url=download_url, save_dir=save_dir, file_name=filename)
             except Exception as e:
                 logger.error(f"Download failed for {download_url}: {e}", exc_info=True)
                 raise  # Re-raise to stop the workflow and show the error
+            send_toast_notification("Finished downloading", "Download", 'success')
         else:
             logger.info(f"Found existing file, skipping download: '{local_filepath}'")
 
