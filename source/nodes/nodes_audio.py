@@ -9,12 +9,17 @@ import torch
 import torchaudio
 import torchaudio.transforms as T
 from typing import Optional, Dict, Any
-import folder_paths  # To get the ComfyUI input directory
 from .utils.aligner import AudioBatchAligner
 from .utils.logger import main_logger
 from .utils.misc import parse_time_to_seconds, parse_note_to_frequency
 from .utils.downmix import spectral_downmix
 from .utils.downloader import download_model
+try:
+    from folder_paths import get_input_directory   # To get the ComfyUI input directory
+except ModuleNotFoundError:
+    # No ComfyUI, this is a test environment
+    def get_input_directory():
+        return ""
 
 logger = main_logger
 BASE_CATEGORY = "audio"
@@ -1068,7 +1073,7 @@ class AudioDownload:
 
     def load_or_download_audio(self, base_url: str, filename: str, target_sample_rate: int):
         # Determine the save directory: ComfyUI's input directory
-        save_dir = folder_paths.get_input_directory()
+        save_dir = get_input_directory()
         local_filepath = os.path.join(save_dir, filename)
 
         # 1. Check if the file already exists locally
