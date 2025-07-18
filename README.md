@@ -23,6 +23,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [14. Audio Split 2 Channels](#14-audio-split-2-channels)
   - [15. Audio Normalize (Peak)](#15-audio-normalize-peak)
   - [16. Audio Apply Batched Gain](#16-audio-apply-batched-gain)
+  - [17. Audio Download and Load](#17-audio-download-and-load)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
@@ -283,6 +284,21 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `gain_values` (FLOAT): A batch of gain values. The node expects this to be a 1D tensor of shape `(batch_size,)`, which is the format provided by the `original_peak_level` output of the `Audio Normalize` node.
    - **Output:**
      - `audio_out` (AUDIO): The audio with the per-item gain applied.
+
+### 17. Audio Download and Load
+   - **Display Name:** `Audio Download and Load`
+   - **Internal Name:** `SET_AudioDownload`
+   - **Category:** `audio/io`
+   - **Description:** Downloads an audio file from a URL into the `ComfyUI/input/` directory if it's not already there, and then loads it as an audio signal. This is perfect for creating self-contained, shareable workflows with example audio.
+   - **Inputs:**
+     - `base_url` (STRING): The URL of the directory containing the audio file.
+     - `filename` (STRING): The name of the file to download and load (e.g., `music.mp3`).
+     - `target_sample_rate` (INT): The sample rate to load the audio at. Set to `0` to use the file's original sample rate.
+   - **Output:**
+     - `audio` (AUDIO): The loaded audio signal.
+   - **Behavior Details:**
+     - **Caching:** The node checks the `ComfyUI/input/` folder first. If the file with the specified `filename` already exists, the download is skipped.
+     - **Resampling:** `librosa` is used to load the audio, and it will resample to `target_sample_rate` during loading if a non-zero value is provided.
 
 
 ## &#x0001F680; Installation
