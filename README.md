@@ -347,6 +347,9 @@ Once installed the examples are available in the ComfyUI workflow templates, in 
 
 - 1.1.1 2025-06-30: Just better project description
 
+- 1.2.0 2025-07-18: `Audio Cut`, `Audio Concatenate`, `Audio Blend`, `Audio Test Signal Generator`, `Audio Musical Note`, `Audio Join 2 Channels`, `Audio Split 2 Channels`, `Audio Normalize (Peak)` and `Audio Apply Batched Gain`
+
+
 ## &#x2696;&#xFE0F; License
 
 [GPL-3.0](LICENSE)
