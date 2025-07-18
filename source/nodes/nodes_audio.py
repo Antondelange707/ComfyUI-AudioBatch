@@ -904,3 +904,131 @@ class AudioConcatenate:
             "sample_rate": target_sr
         }
         return (output_audio,)
+
+
+class AudioNormalize:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "audio": ("AUDIO", {"tooltip": "The audio to normalize."}),
+                "peak_level": ("FLOAT", {
+                    "default": 1.0,
+                    "min": 0.0,
+                    "max": 10.0,  # Allow some headroom if needed
+                    "step": 0.01,
+                    "tooltip": "The target peak amplitude level. 1.0 is 0 dBFS (maximum)."
+                })
+            },
+        }
+
+    RETURN_TYPES = ("AUDIO", "TORCH_TENSOR")
+    RETURN_NAMES = ("normalized_audio", "original_peak_level")
+    FUNCTION = "normalize_audio"
+    CATEGORY = BASE_CATEGORY + "/" + MANIPULATION_CATEGORY
+    DESCRIPTION = "Normalizes audio so its loudest peak reaches a target level."
+    UNIQUE_NAME = "SET_AudioNormalize"
+    DISPLAY_NAME = "Audio Normalize (Peak)"
+
+    def normalize_audio(self, audio: dict, peak_level: float):
+        waveform = audio['waveform']
+        sample_rate = audio['sample_rate']
+
+        logger.debug(f"Normalizing audio of shape {waveform.shape} to target peak: {peak_level}")
+
+        # Find the maximum absolute value for each batch item.
+        # This is the original peak level we need to return.
+        original_peak_level, _ = torch.max(torch.abs(waveform), dim=2, keepdim=True)
+        original_peak_level, _ = torch.max(original_peak_level, dim=1, keepdim=True)
+        # original_peak_level shape is (B, 1, 1)
+
+        # Define a threshold for what we consider silent to avoid division by zero
+        silence_threshold = 1e-8
+
+        # Calculate the gain factor needed to reach the target peak_level.
+        # Add the threshold to the denominator to prevent division by zero for silent clips.
+        gain_factor = peak_level / (original_peak_level + silence_threshold)
+
+        # For silent clips (where original_peak_level is below threshold), the gain
+        # will be huge but will be multiplied by ~0, resulting in ~0 (silence).
+        # We can explicitly set gain to 0 for silent clips to be safer.
+        is_silent = original_peak_level <= silence_threshold
+        gain_factor[is_silent] = 0.0
+
+        # Apply the gain
+        normalized_waveform = waveform * gain_factor
+
+        # The value needed to revert is the original peak level.
+        # Squeeze it to be a more convenient shape for other nodes (e.g., a 1D tensor or a scalar if B=1)
+        # Squeeze removes all dims of size 1. (B,1,1) -> (B)
+        revert_value = original_peak_level.squeeze()
+        # If the original batch size was 1, this will be a 0-dim tensor (scalar).
+        # Let's ensure it's at least a 1D tensor for consistency.
+        if revert_value.ndim == 0:
+            revert_value = revert_value.unsqueeze(0)  # Make it (1,)
+
+        logger.info(f"Peak normalization applied. Original avg peak: {original_peak_level.mean():.4f}, "
+                    f"Target peak: {peak_level}")
+
+        output_audio = {"waveform": normalized_waveform, "sample_rate": sample_rate}
+
+        # The revert_value is the original peak level for each item in the batch
+        return (output_audio, revert_value)
+
+
+class AudioApplyBatchedGain:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "audio": ("AUDIO", {"tooltip": "The audio batch to apply gain to."}),
+                "gain_values": ("TORCH_TENSOR", {
+                    "tooltip": "A batch of gain values (e.g., from an Audio Normalize node). Expects a 1D tensor."
+                }),
+            },
+        }
+
+    RETURN_TYPES = ("AUDIO",)
+    RETURN_NAMES = ("audio_out",)
+    FUNCTION = "apply_gain"
+    CATEGORY = BASE_CATEGORY + "/" + MANIPULATION_CATEGORY
+    DESCRIPTION = "Applies a different gain (volume) to each item in an audio batch."
+    UNIQUE_NAME = "SET_AudioApplyBatchedGain"
+    DISPLAY_NAME = "Audio Apply Batched Gain"
+
+    def apply_gain(self, audio: dict, gain_values: torch.Tensor):
+        waveform = audio['waveform']
+        sample_rate = audio['sample_rate']
+
+        batch_size = waveform.shape[0]
+
+        # Ensure gain_values is a tensor
+        if not isinstance(gain_values, torch.Tensor):
+            # If a simple float is passed, convert it to a tensor
+            # This makes the node more flexible
+            gain_values = torch.tensor([gain_values], dtype=torch.float32)
+
+        # Validate dimensions
+        if gain_values.ndim == 0:  # Handle scalar tensor
+            gain_values = gain_values.unsqueeze(0)
+
+        if gain_values.shape[0] != batch_size:
+            msg = (f"Batch size of audio ({batch_size}) and gain_values ({gain_values.shape[0]}) must match. "
+                   "Connect the `original_peak_level` from an Audio Normalize node.")
+            logger.error(msg)
+            raise ValueError(msg)
+
+        # Reshape gain_values for broadcasting: (B) -> (B, 1, 1)
+        # This allows multiplying (B, C, N) with (B, 1, 1)
+        gain_tensor = gain_values.to(waveform.device, waveform.dtype).reshape(batch_size, 1, 1)
+
+        # Apply the per-item gain
+        adjusted_waveform = waveform * gain_tensor
+
+        logger.info(f"Applied batched gain. Gain range: [{gain_values.min():.4f}, {gain_values.max():.4f}]")
+
+        output_audio = {
+            "waveform": adjusted_waveform,
+            "sample_rate": sample_rate
+        }
+        return (output_audio,)

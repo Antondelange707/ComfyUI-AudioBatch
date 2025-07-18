@@ -15,12 +15,14 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [6. Audio Channel Conv and Resampler](#6-audio-channel-conv-and-resampler)
   - [7. Audio Information](#7-audio-information)
   - [8. Audio Cut](#8-audio-cut)
-  - [9. Audio Concatenate](#8-audio-concatenate)
-  - [10. Audio Blend](#9-audio-blend)
-  - [11. Audio Test Signal Generator](#10-audio-test-signal-generator)
-  - [12. Audio Musical Note](#11-audio-musical-note)
-  - [13. Audio Join 2 Channels](#12-audio-join-2-channels)
-  - [14. Audio Split 2 Channels](#13-audio-split-2-channels)
+  - [9. Audio Concatenate](#9-audio-concatenate)
+  - [10. Audio Blend](#10-audio-blend)
+  - [11. Audio Test Signal Generator](#11-audio-test-signal-generator)
+  - [12. Audio Musical Note](#12-audio-musical-note)
+  - [13. Audio Join 2 Channels](#13-audio-join-2-channels)
+  - [14. Audio Split 2 Channels](#14-audio-split-2-channels)
+  - [15. Audio Normalize (Peak)](#15-audio-normalize-peak)
+  - [16. Audio Apply Batched Gain](#16-audio-apply-batched-gain)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
@@ -259,6 +261,30 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `audio_left` (AUDIO): A mono audio signal containing only the left channel data.
      - `audio_right` (AUDIO): A mono audio signal containing only the right channel data.
 
+### 15. Audio Normalize (Peak)
+   - **Display Name:** `Audio Normalize (Peak)`
+   - **Internal Name:** `SET_AudioNormalize`
+   - **Category:** `audio/manipulation`
+   - **Description:** Normalizes the volume of an audio signal so that its loudest point (peak) reaches a specified target level. This is useful for maximizing volume without clipping.
+   - **Inputs:**
+     - `audio` (AUDIO): The audio to normalize. Supports batches.
+     - `peak_level` (FLOAT): The target peak amplitude level. `1.0` is the maximum possible level (0 dBFS). Normalizing to slightly less, like `0.9`, can provide headroom.
+   - **Outputs:**
+     - `normalized_audio` (AUDIO): The audio with its volume adjusted.
+     - `original_peak_level` (FLOAT): The original peak level of the input audio for each item in the batch. **This value can be used with the `Audio Apply Batched Gain` node to revert the normalization and restore the original volume.**
+
+### 16. Audio Apply Batched Gain
+   - **Display Name:** `Audio Apply Batched Gain`
+   - **Internal Name:** `SET_AudioApplyBatchedGain`
+   - **Category:** `audio/manipulation`
+   - **Description:** Applies a separate gain (volume) level to each item in an audio batch. This is the perfect companion to the `Audio Normalize` node for reverting normalization.
+   - **Inputs:**
+     - `audio` (AUDIO): The audio batch to apply gain to.
+     - `gain_values` (FLOAT): A batch of gain values. The node expects this to be a 1D tensor of shape `(batch_size,)`, which is the format provided by the `original_peak_level` output of the `Audio Normalize` node.
+   - **Output:**
+     - `audio_out` (AUDIO): The audio with the per-item gain applied.
+
+
 ## &#x0001F680; Installation
 
 You can install the nodes from the ComfyUI nodes manager, the name is *Audio Batch*, or just do it manually:
@@ -291,6 +317,7 @@ Once installed the examples are available in the ComfyUI workflow templates, in 
 - [generate_and_blend.json](example_workflows/generate_and_blend.json): Shows how to generate four musical notes and blend
   them together to create a chord.
 - [cut_and_concat.json](example_workflows/cut_and_concat.json): Shows how to cut and concatenate audio.
+- [normalize_and_undo.json](example_workflows/normalize_and_undo.json): Shows how to normalize audio level and then revert it.
 
 ## &#x0001F4DD; Usage Notes
 
