@@ -1,7 +1,7 @@
 [project]
 name = "audio-batch"
-description = "Audio batch creation, extraction, information, resample, mono and stereo conversion."
-version = "1.1.1"
+description = "Audio batch creation, extraction, information, resample, mono and stereo conversion. Also cut, concatenate, blend (mix) and de/normalize. Join/split channels (stereo). Signal generator (`sine`, `square`, `sawtooth`, `triangle`, `sweep`, `noise`). Musical note to frequency."
+version = "1.2.0"
 license = { file = "LICENSE" }
 dependencies = []
 
