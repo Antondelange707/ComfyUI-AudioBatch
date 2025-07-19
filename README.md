@@ -291,6 +291,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Category:** `audio/io`
    - **Description:** Downloads an audio file from a URL into the `ComfyUI/input/` directory if it's not already there, and then loads it as an audio signal. This is perfect for creating self-contained, shareable workflows with example audio.
    - **Inputs:**
+     - `audio_bypass` (AUDIO, Optional): If an audio is provided here it will be used for the output. You can connect a `Load Audio` node here, if the connected node is muted (bypassed) we download the file, otherwise we use the audio from the `Load Audio` node.
      - `base_url` (STRING): The URL of the directory containing the audio file.
      - `filename` (STRING): The name of the file to download and load (e.g., `music.mp3`).
      - `target_sample_rate` (INT): The sample rate to load the audio at. Set to `0` to use the file's original sample rate.
@@ -298,7 +299,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - `audio` (AUDIO): The loaded audio signal.
    - **Behavior Details:**
      - **Caching:** The node checks the `ComfyUI/input/` folder first. If the file with the specified `filename` already exists, the download is skipped.
-     - **Resampling:** `librosa` is used to load the audio, and it will resample to `target_sample_rate` during loading if a non-zero value is provided.
+     - **Resampling:** `torchaudio` is used to load the audio, and it will resample to `target_sample_rate` during loading if a non-zero value is provided.
 
 
 ## &#x0001F680; Installation

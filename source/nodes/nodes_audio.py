@@ -1063,6 +1063,9 @@ class AudioDownload:
                 }),
                 # This is a magic input that will be converted to the audio player by ComfyUI frontend
                 "audioUI": ("AUDIO_UI", {}),
+            },
+            "optional": {
+                "audio_bypass": ("AUDIO", {"tooltip": "If this audio is present will be used instead of the downloaded one"}),
             }
         }
 
@@ -1075,7 +1078,10 @@ class AudioDownload:
     DISPLAY_NAME = "Audio Download and Load"
     OUTPUT_NODE = True
 
-    def load_or_download_audio(self, base_url: str, filename: str, target_sample_rate: int, audioUI: str):
+    def load_or_download_audio(self, base_url: str, filename: str, target_sample_rate: int, audioUI: str,
+                               audio_bypass: Optional[Dict[str, Any]] = None):
+        if audio_bypass:
+            return (audio_bypass,)
         # Determine the save directory: ComfyUI's input directory
         save_dir = get_input_directory()
         local_filepath = os.path.join(save_dir, filename)
