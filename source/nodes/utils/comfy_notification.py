@@ -35,7 +35,7 @@ def send_toast_notification(message: str, summary: str = "Warning", severity: st
         return
     try:
         PromptServer.instance.send_sync(
-            "set-audioseparation-toast",  # This is our custom event name
+            "set-audiobatch-toast",  # This is our custom event name
             {
                 'message': message,
                 'summary': summary,
