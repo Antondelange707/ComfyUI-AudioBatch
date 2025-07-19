@@ -300,6 +300,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
    - **Behavior Details:**
      - **Caching:** The node checks the `ComfyUI/input/` folder first. If the file with the specified `filename` already exists, the download is skipped.
      - **Resampling:** `torchaudio` is used to load the audio, and it will resample to `target_sample_rate` during loading if a non-zero value is provided.
+     - **Player**: This node uses an `AUDIO_UI` widget to allow playing the downloaded song.
 
 
 ## &#x0001F680; Installation
@@ -329,8 +330,13 @@ Once installed the examples are available in the ComfyUI workflow templates, in 
 
 - [audio_batch_select_example.json](example_workflows/audio_batch_select_example.json): Shows how to create a batch and
   how to extract a single element from the batch.
+- [audio_batch_select_example_extra.json](example_workflows/audio_batch_select_example_extra.json): This is like
+  **audio_batch_select_example.json**, but shows how to use `Audio Download and Load`, so you have three aeasy to use
+  audio files that are automatically downloaded.
 - [resample_force_stereo.json](example_workflows/resample_force_stereo.json): Shows how to change the number of channels
   and the sample rate.
+- [resample_force_stereo_extra.json](example_workflows/resample_force_stereo_extra.json): This is like
+  **resample_force_stereo.json** but with more information (needs Easy-Use nodes) and shows how to use `Audio Download and Load`
 - [generate_and_blend.json](example_workflows/generate_and_blend.json): Shows how to generate four musical notes and blend
   them together to create a chord.
 - [cut_and_concat.json](example_workflows/cut_and_concat.json): Shows how to cut and concatenate audio.
