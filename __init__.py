@@ -23,4 +23,5 @@ for name, obj in inspect.getmembers(nodes_audio):
 init_logger.info(f"Registering {len(NODE_CLASS_MAPPINGS)} node(s).")
 init_logger.debug(f"{list(NODE_DISPLAY_NAME_MAPPINGS.values())}")
 
+WEB_DIRECTORY = "./js"
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
