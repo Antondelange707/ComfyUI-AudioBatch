@@ -1061,6 +1061,8 @@ class AudioDownload:
                     "default": 0, "min": 0, "max": 192000, "step": 100,
                     "tooltip": "Target sample rate to load the audio at. 0 means use the file's original sample rate."
                 }),
+                # This is a magic input that will be converted to the audio player by ComfyUI frontend
+                "audioUI": ("AUDIO_UI", {}),
             }
         }
 
@@ -1071,8 +1073,9 @@ class AudioDownload:
     DESCRIPTION = "Downloads an audio file to the ComfyUI 'input' directory if it doesn't exist, then loads it."
     UNIQUE_NAME = "SET_AudioDownload"
     DISPLAY_NAME = "Audio Download and Load"
+    OUTPUT_NODE = True
 
-    def load_or_download_audio(self, base_url: str, filename: str, target_sample_rate: int):
+    def load_or_download_audio(self, base_url: str, filename: str, target_sample_rate: int, audioUI: str):
         # Determine the save directory: ComfyUI's input directory
         save_dir = get_input_directory()
         local_filepath = os.path.join(save_dir, filename)
@@ -1121,7 +1124,15 @@ class AudioDownload:
                 "waveform": waveform_batched,
                 "sample_rate": loaded_sr
             }
-            return (output_audio,)
+            # This is the information needed to update the audio widget (player)
+            downloaded_file = {
+                 "audio": [{
+                     "filename": filename,
+                     "subfolder": "",
+                     "type": "input"  # We stored the file in the "input" folder
+                 }]
+            }
+            return {"ui":  downloaded_file, "result": [output_audio]}
 
         except Exception as e:
             logger.error(f"Failed to load or process audio file '{local_filepath}': {e}", exc_info=True)
