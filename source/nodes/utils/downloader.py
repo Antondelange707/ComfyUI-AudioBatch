@@ -191,8 +191,8 @@ def download_model_urllib(url: str, save_dir: str, file_name: str):
     return Downloader(save_dir, file_name).download_model(url)
 
 
-def download_model(url: str, save_dir: str, file_name: str, force_urllib: bool = False):
-    logger.info(f"Downloading model: {file_name}")
+def download_model(url: str, save_dir: str, file_name: str, force_urllib: bool = False, kind: str = "model"):
+    logger.info(f"Downloading {kind}: {file_name}")
     logger.info(f"Source URL: {url}")
     full_name = os.path.join(save_dir, file_name)
     logger.info(f"Destination: {full_name}")

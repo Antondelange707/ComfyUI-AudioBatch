@@ -24,6 +24,8 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [15. Audio Normalize (Peak)](#15-audio-normalize-peak)
   - [16. Audio Apply Batched Gain](#16-audio-apply-batched-gain)
   - [17. Audio Download and Load](#17-audio-download-and-load)
+- [&#x2728; Extra nodes](#-extra-nodes)
+  - [1. Image Download and Load](#1-image-download-and-load)
 - [&#x0001F680; Installation](#-installation)
 - [&#x0001F4E6; Dependencies](#-dependencies)
 - [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
@@ -301,6 +303,28 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - **Caching:** The node checks the `ComfyUI/input/` folder first. If the file with the specified `filename` already exists, the download is skipped.
      - **Resampling:** `torchaudio` is used to load the audio, and it will resample to `target_sample_rate` during loading if a non-zero value is provided.
      - **Player**: This node uses an `AUDIO_UI` widget to allow playing the downloaded song.
+
+
+## &#x2728; Extra nodes
+
+These nodes are just complements for the other nodes. I.e. they share a lot of code.
+
+### 1. Image Download and Load
+   - **Display Name:** `Image Download and Load`
+   - **Internal Name:** `SET_ImageDownload`
+   - **Category:** `image/io`
+   - **Description:** Downloads an image file from a URL into the `ComfyUI/input/` directory if it's not already there, and then loads it as an image and mask. This is perfect for creating self-contained, shareable workflows with example image.
+   - **Inputs:**
+     - `image_bypass` (IMAGE, Optional): If an image is provided here it will be used for the output. You can connect a `Load Image` node here, if the connected node is muted (bypassed) we download the file, otherwise we use the image from the `Load Image` node.
+     - `mask_bypass` (MASK, Optional): This input complements `image_bypass`.
+     - `base_url` (STRING): The URL of the directory containing the image file.
+     - `filename` (STRING): The name of the image file to download (e.g., photo.jpg, art.png).
+   - **Output:**
+     - `image` (IMAGE): The loaded image.
+     - `alpha_mask` (MASK): The alpha mask for the loaded image.
+   - **Behavior Details:**
+     - **Caching:** The node checks the `ComfyUI/input/` folder first. If the file with the specified `filename` already exists, the download is skipped.
+     - **Bypass:** If only one of `image_bypass` and `mask_bypass` is connected the other will be assumed to be empty. You should connect both or avoid using the output corresponding to the unconnected input.
 
 
 ## &#x0001F680; Installation

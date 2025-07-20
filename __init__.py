@@ -14,7 +14,8 @@ NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
 
 for name, obj in inspect.getmembers(nodes_audio):
-    if not inspect.isclass(obj) or not hasattr(obj, "INPUT_TYPES"):
+    # We skip nodes imported from the ComfyUI main nodes
+    if not inspect.isclass(obj) or not hasattr(obj, "INPUT_TYPES") or obj.__module__ == "nodes":
         continue
     assert hasattr(obj, "UNIQUE_NAME"), f"No name for {obj.__name__}"
     NODE_CLASS_MAPPINGS[obj.UNIQUE_NAME] = obj
