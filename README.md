@@ -19,6 +19,8 @@ workflows, especially when dealing with multiple audio inputs or outputs.
 
 &#x2705; QoL: audio information, download audio, musical note to freq, signal generator
 
+&#x2705; Warnings and errors visible in the browser, configurable debug information in the console
+
 
 ## &#x0001F4DC; Table of Contents
 
