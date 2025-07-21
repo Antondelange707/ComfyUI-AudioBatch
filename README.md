@@ -22,6 +22,9 @@ workflows, especially when dealing with multiple audio inputs or outputs.
 
 ## &#x0001F4DC; Table of Contents
 
+- &#x0001F680; [Installation](#-installation)
+- &#x0001F4E6; [Dependencies](#-dependencies)
+- &#x0001F5BC;&#xFE0F; [Examples](#&#xFE0F;-examples)
 - &#x2728; [Nodes](#-nodes)
   - [1. Batch Audios](#1-batch-audios)
   - [2. Select Audio from Batch](#2-select-audio-from-batch)
@@ -42,9 +45,6 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [17. Audio Download and Load](#17-audio-download-and-load)
 - &#x2728; [Extra nodes](#-extra-nodes)
   - [1. Image Download and Load](#1-image-download-and-load)
-- &#x0001F680; [Installation](#-installation)
-- &#x0001F4E6; [Dependencies](#-dependencies)
-- &#x0001F5BC;&#xFE0F; [Examples](#&#xFE0F;-examples)
 - &#x0001F4DD; [Usage Notes](#-usage-notes)
 - &#x0001F6E0;&#xFE0F; [Future Improvements / TODO](#&#xFE0F;-future-improvements--todo)
 - &#x0001F4DC; [Project History](#-project-history)
