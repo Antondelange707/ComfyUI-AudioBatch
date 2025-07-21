@@ -45,8 +45,6 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [15. Audio Normalize (Peak)](#15-audio-normalize-peak)
   - [16. Audio Apply Batched Gain](#16-audio-apply-batched-gain)
   - [17. Audio Download and Load](#17-audio-download-and-load)
-- &#x2728; [Extra nodes](#-extra-nodes)
-  - [1. Image Download and Load](#1-image-download-and-load)
 - &#x0001F4DD; [Usage Notes](#-usage-notes)
 - &#x0001F6E0;&#xFE0F; [Future Improvements / TODO](#&#xFE0F;-future-improvements--todo)
 - &#x0001F4DC; [Project History](#-project-history)
@@ -323,28 +321,6 @@ workflows, especially when dealing with multiple audio inputs or outputs.
      - **Player**: This node uses an `AUDIO_UI` widget to allow playing the downloaded song.
 
 
-## &#x2728; Extra nodes
-
-These nodes are just complements for the other nodes. I.e. they share a lot of code.
-
-### 1. Image Download and Load
-   - **Display Name:** `Image Download and Load`
-   - **Internal Name:** `SET_ImageDownload`
-   - **Category:** `image/io`
-   - **Description:** Downloads an image file from a URL into the `ComfyUI/input/` directory if it's not already there, and then loads it as an image and mask. This is perfect for creating self-contained, shareable workflows with example image.
-   - **Inputs:**
-     - `image_bypass` (IMAGE, Optional): If an image is provided here it will be used for the output. You can connect a `Load Image` node here, if the connected node is muted (bypassed) we download the file, otherwise we use the image from the `Load Image` node.
-     - `mask_bypass` (MASK, Optional): This input complements `image_bypass`.
-     - `base_url` (STRING): The URL of the directory containing the image file.
-     - `filename` (STRING): The name of the image file to download (e.g., photo.jpg, art.png).
-   - **Output:**
-     - `image` (IMAGE): The loaded image.
-     - `alpha_mask` (MASK): The alpha mask for the loaded image.
-   - **Behavior Details:**
-     - **Caching:** The node checks the `ComfyUI/input/` folder first. If the file with the specified `filename` already exists, the download is skipped.
-     - **Bypass:** If only one of `image_bypass` and `mask_bypass` is connected the other will be assumed to be empty. You should connect both or avoid using the output corresponding to the unconnected input.
-
-
 ## &#x0001F680; Installation
 
 You can install the nodes from the ComfyUI nodes manager, the name is *Audio Batch*, or just do it manually:
@@ -356,19 +332,22 @@ You can install the nodes from the ComfyUI nodes manager, the name is *Audio Bat
     ```
 2.  Restart ComfyUI.
 
-The nodes should then appear under the "audio/batch" and "audio/conversion" categories in the "Add Node" menu.
+The nodes should then appear under the "audio/batch", "audio/conversion","audio/manipulation", "audio/generation" and "audio/io" categories in the "Add Node" menu.
+
 
 ## &#x0001F4E6; Dependencies
 
 - PyTorch
 - Torchaudio (for resampling and potentially other audio operations)
 - NumPy (often used with audio data)
+- Requests (optional): Usually an indirect ComfyUI dependency. If installed it will be used for downloads, it should be more robust than then built-in `urllib`, used as fallback.
+- Colorama (optional): Might help to get colored log messages on some terminals. We use ANSI escape sequences when it isn't installed.
 
 These are typically already present in a standard ComfyUI environment.
 
 ## &#x0001F5BC;&#xFE0F; Examples
 
-Once installed the examples are available in the ComfyUI workflow templates, in the *Audio Batch* section.
+Once installed the examples are available in the ComfyUI workflow templates, in the *Audio Batch* section (or ComfyUI-AudioBatch).
 
 - [audio_batch_select_example.json](example_workflows/audio_batch_select_example.json): Shows how to create a batch and
   how to extract a single element from the batch.
