@@ -4,9 +4,25 @@ This repository provides a set of custom nodes for ComfyUI focused on audio batc
 channel conversion and resampling. These nodes are designed to help manage and prepare audio data within your ComfyUI
 workflows, especially when dealing with multiple audio inputs or outputs.
 
+
+## &#x2699;&#xFE0F; Main features
+
+&#x2705; No extra dependencies, we use the same modules as ComfyUI
+
+&#x2705; All operations accepts batches (multiple audio in the same noodle)
+
+&#x2705; Batch: create and separate
+
+&#x2705; Conversion: channels and sample rate
+
+&#x2705; Manipulation: cut, concatenate, blend, join/split stereo, de/normalization
+
+&#x2705; QoL: audio information, download audio, musical note to freq, signal generator
+
+
 ## &#x0001F4DC; Table of Contents
 
-- [&#x2728; Nodes](#-nodes)
+- &#x2728; [Nodes](#-nodes)
   - [1. Batch Audios](#1-batch-audios)
   - [2. Select Audio from Batch](#2-select-audio-from-batch)
   - [3. Audio Channel Converter](#3-audio-channel-converter)
@@ -24,16 +40,16 @@ workflows, especially when dealing with multiple audio inputs or outputs.
   - [15. Audio Normalize (Peak)](#15-audio-normalize-peak)
   - [16. Audio Apply Batched Gain](#16-audio-apply-batched-gain)
   - [17. Audio Download and Load](#17-audio-download-and-load)
-- [&#x2728; Extra nodes](#-extra-nodes)
+- &#x2728; [Extra nodes](#-extra-nodes)
   - [1. Image Download and Load](#1-image-download-and-load)
-- [&#x0001F680; Installation](#-installation)
-- [&#x0001F4E6; Dependencies](#-dependencies)
-- [&#x0001F5BC;&#xFE0F; Examples](#&#xFE0F;-examples)
-- [&#x0001F4DD; Usage Notes](#-usage-notes)
-- [&#x0001F6E0;&#xFE0F; Future Improvements / TODO](#&#xFE0F;-future-improvements--todo)
-- [&#x0001F4DC; Project History](#-project-history)
-- [&#x2696;&#xFE0F; License](#&#xFE0F;-license)
-- [&#x0001F64F; Attributions](#-attributions)
+- &#x0001F680; [Installation](#-installation)
+- &#x0001F4E6; [Dependencies](#-dependencies)
+- &#x0001F5BC;&#xFE0F; [Examples](#&#xFE0F;-examples)
+- &#x0001F4DD; [Usage Notes](#-usage-notes)
+- &#x0001F6E0;&#xFE0F; [Future Improvements / TODO](#&#xFE0F;-future-improvements--todo)
+- &#x0001F4DC; [Project History](#-project-history)
+- &#x2696;&#xFE0F; [License](#&#xFE0F;-license)
+- &#x0001F64F; [Attributions](#-attributions)
 
 ## &#x2728; Nodes
 
