@@ -4,9 +4,6 @@
 # Project: ComfyUI-AudioBatch
 import re
 
-NODES_NAME = "AudioBatch"
-NODES_DEBUG_VAR = NODES_NAME.upper() + "_NODES_DEBUG"
-
 
 def parse_time_to_seconds(time_str: str) -> float:
     """

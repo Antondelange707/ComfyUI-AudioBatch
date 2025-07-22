@@ -8,7 +8,7 @@
 import logging
 import torch
 import torchaudio.transforms as T
-from .misc import NODES_NAME
+from .. import NODES_NAME
 
 logger = logging.getLogger(f"{NODES_NAME}.aligner")
 

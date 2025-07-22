@@ -51,7 +51,7 @@ repos:
         # The command to execute. It's expected to be found in the PATH
         # of the environment where you run `git commit`.
         entry: mypy
-        args: ["--explicit-package-bases", "source/"]
+        args: ["--explicit-package-bases", "src/"]
         # 'system' tells pre-commit to find the command in the current environment
         # instead of building an isolated one.
         language: system

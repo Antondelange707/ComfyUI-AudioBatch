@@ -10,11 +10,11 @@ import torchaudio
 import torchaudio.transforms as T
 from typing import Optional, Dict, Any
 from .utils.aligner import AudioBatchAligner
-from .utils.logger import main_logger
+from seconohe.downloader import download_file
+# We are the main source, so we use the main_logger
+from . import main_logger
 from .utils.misc import parse_time_to_seconds, parse_note_to_frequency
 from .utils.downmix import spectral_downmix
-from .utils.downloader import download_model
-from .utils.comfy_notification import send_toast_notification
 try:
     from folder_paths import get_input_directory   # To get the ComfyUI input directory
 except ModuleNotFoundError:
@@ -33,7 +33,7 @@ DOWNMIX_OPTIONS = (["average", "standard_gain", "spectral"],
                    {"default": "standard_gain",
                     "tooltip": ("Method for stereo/multi-channel to mono conversion:\n"
                                 "- average: Simple average ((L+R)/2). Can reduce volume.\n"
-                                "- standard_gain: Sums channels with -3dB gain (0.707). "
+                                "- standard_gain: Sums channels with -3 dB gain (0.707). "
                                 "Better preserves perceived loudness."
                                 "- spectral: Averages frequency magnitudes to prevent phase cancellation.")})
 DOWNMIX_NFFT = ("INT", {
@@ -1093,14 +1093,12 @@ class AudioDownload:
             if not base_url.endswith('/'):
                 base_url += '/'
             download_url = base_url + filename
-            send_toast_notification(f"Downloading `{filename}`", "Download")
 
             try:
-                download_model(url=download_url, save_dir=save_dir, file_name=filename, kind="audio")
+                download_file(logger, url=download_url, save_dir=save_dir, file_name=filename, kind="audio")
             except Exception as e:
                 logger.error(f"Download failed for {download_url}: {e}", exc_info=True)
                 raise  # Re-raise to stop the workflow and show the error
-            send_toast_notification("Finished downloading", "Download", 'success')
         else:
             logger.info(f"Found existing file, skipping download: '{local_filepath}'")
 

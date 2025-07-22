@@ -5,9 +5,9 @@
 #
 # Audio batch aligner
 # Original code from Gemini 2.5 Pro
-import torch
 import logging
-from .misc import NODES_NAME
+import torch
+from .. import NODES_NAME
 
 logger = logging.getLogger(f"{NODES_NAME}.DownmixUtil")
 
