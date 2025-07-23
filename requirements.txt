@@ -1,6 +1,4 @@
 torch
 torchaudio
 numpy
-
-# non essential dependencies:
-colorama
+seconohe
