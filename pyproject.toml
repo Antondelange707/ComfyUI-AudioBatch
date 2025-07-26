@@ -25,3 +25,4 @@ dependencies = {file = ["requirements.txt"]}
 [tool.comfy]
 PublisherId = "set-soft"
 DisplayName = "Audio Batch"
+Icon = "https://raw.githubusercontent.com/set-soft/ComfyUI-AudioBatch/main/assets/icon_400x400.jpg"
