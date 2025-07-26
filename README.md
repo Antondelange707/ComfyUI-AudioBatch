@@ -1,7 +1,7 @@
 # ComfyUI Audio Batch & Utility Nodes &#x0001F3A7;&#x0001F39B;&#xFE0F;
 
 
-![Audio Batch](https://raw.githubusercontent.com/set-soft/ComfyUI-AudioBatch/main/assets/banner_1280.jpg)
+![Audio Batch](https://raw.githubusercontent.com/set-soft/ComfyUI-AudioBatch/seconohe/assets/banner_1280.jpg)
 
 
 This repository provides a set of custom nodes for ComfyUI focused on audio batching and common audio processing tasks like
