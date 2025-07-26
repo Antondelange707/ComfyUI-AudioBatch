@@ -49,5 +49,5 @@ jobs:
       # 4. Run tests using the Makefile
       # We specify the working directory for the `make` command.
       - name: Run tests with pytest via Makefile
-        working-directory: ./source
+        working-directory: ./src
         run: make test
