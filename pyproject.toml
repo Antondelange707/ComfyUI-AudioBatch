@@ -7,9 +7,12 @@ Signal generator (`sine`, `square`, `sawtooth`, `triangle`, `sweep`, `noise`).
 Musical note to frequency.
 Audio downloader for quick workflows which downloads its example data.
 """
+# Inconsistent mechanism needed by comfy-cli, no dynamic variables
 version = "1.3.0"
+# Deprecated mechanism, comfy-cli doesn't support SPDX
 license = { file = "LICENSE" }
-dependencies = []
+# Not really used, ComfyUI-Manager doesn't use it
+dependencies = ["seconohe"]
 
 [project.urls]
 Repository = "https://github.com/set-soft/ComfyUI-AudioBatch"
