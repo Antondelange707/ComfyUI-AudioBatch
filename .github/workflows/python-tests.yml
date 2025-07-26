@@ -44,7 +44,7 @@ jobs:
           # This command is for PyTorch 2.2.1 on Linux. Adjust if needed.
           pip install torch==2.2.1+cpu torchaudio==2.2.1+cpu --index-url https://download.pytorch.org/whl/cpu
           # Check for a requirements-dev.txt file in the src directory
-          if [ -f source/requirements-dev.txt ]; then pip install -r source/requirements-dev.txt; fi
+          if [ -f src/requirements-dev.txt ]; then pip install -r src/requirements-dev.txt; fi
 
       # 4. Run tests using the Makefile
       # We specify the working directory for the `make` command.
