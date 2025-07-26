@@ -7,7 +7,7 @@ workflows, especially when dealing with multiple audio inputs or outputs.
 
 ## &#x2699;&#xFE0F; Main features
 
-&#x2705; No extra dependencies, we use the same modules as ComfyUI
+&#x2705; No extra heavy dependencies, we use the same modules as ComfyUI and a small module with ComfyUI helpers
 
 &#x2705; All operations accepts batches (multiple audio in the same noodle)
 
@@ -330,16 +330,18 @@ You can install the nodes from the ComfyUI nodes manager, the name is *Audio Bat
     cd ComfyUI/custom_nodes/
     git clone https://github.com/set-soft/ComfyUI-AudioBatch ComfyUI-AudioBatch
     ```
-2.  Restart ComfyUI.
+2.  Install SeCoNoHe: `pip install seconohe`
+3.  Restart ComfyUI.
 
 The nodes should then appear under the "audio/batch", "audio/conversion","audio/manipulation", "audio/generation" and "audio/io" categories in the "Add Node" menu.
 
 
 ## &#x0001F4E6; Dependencies
 
-- PyTorch
-- Torchaudio (for resampling and potentially other audio operations)
-- NumPy (often used with audio data)
+- PyTorch: Installed by ComfyUI
+- Torchaudio (for resampling and potentially other audio operations): Installed by ComfyUI
+- NumPy: Installed by ComfyUI
+- SeCoNoHe (seconohe): This is just some functionality I wrote shared by my nodes, only depends on ComfyUI.
 - Requests (optional): Usually an indirect ComfyUI dependency. If installed it will be used for downloads, it should be more robust than then built-in `urllib`, used as fallback.
 - Colorama (optional): Might help to get colored log messages on some terminals. We use ANSI escape sequences when it isn't installed.
 
