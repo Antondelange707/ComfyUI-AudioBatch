@@ -1,0 +1,2432 @@
+{
+  "id": "e8b62973-75c5-491a-b715-acf67fe5962c",
+  "revision": 0,
+  "last_node_id": 206,
+  "last_link_id": 389,
+  "nodes": [
+    {
+      "id": 19,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1232.5762939453125,
+        522.3967895507812
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 15,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 18
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Bass",
+        "320k"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 18,
+      "type": "Audio Analysis",
+      "pos": [
+        673.98486328125,
+        543.9865112304688
+      ],
+      "size": [
+        291.140625,
+        166
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_sep_model",
+          "type": "AUDIO_SEPARATION_MODEL",
+          "link": 19
+        },
+        {
+          "name": "batch_size",
+          "type": "INT",
+          "link": 20
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": 21
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 27
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processed_audio",
+          "type": "AUDIO",
+          "links": [
+            18,
+            80
+          ]
+        },
+        {
+          "name": "original_audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "audio_weights",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "graph_audio",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui_yvann-nodes",
+        "ver": "2.0.2",
+        "Node name for S&R": "Audio Analysis"
+      },
+      "widgets_values": [
+        "Bass Only",
+        0.5,
+        1
+      ],
+      "color": "#223",
+      "bgcolor": "#335",
+      "shape": 1
+    },
+    {
+      "id": 20,
+      "type": "Audio Analysis",
+      "pos": [
+        679.7229614257812,
+        769.172119140625
+      ],
+      "size": [
+        291.140625,
+        166
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_sep_model",
+          "type": "AUDIO_SEPARATION_MODEL",
+          "link": 23
+        },
+        {
+          "name": "batch_size",
+          "type": "INT",
+          "link": 24
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": 25
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 28
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processed_audio",
+          "type": "AUDIO",
+          "links": [
+            22,
+            81
+          ]
+        },
+        {
+          "name": "original_audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "audio_weights",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "graph_audio",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui_yvann-nodes",
+        "ver": "2.0.2",
+        "Node name for S&R": "Audio Analysis"
+      },
+      "widgets_values": [
+        "Others Audio",
+        0.5,
+        1
+      ],
+      "color": "#332922",
+      "bgcolor": "#593930",
+      "shape": 1
+    },
+    {
+      "id": 14,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1226.0850830078125,
+        69.0137939453125
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 11,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 11
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Drums",
+        "320k"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 63,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1440.6046142578125,
+        109.16981506347656
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 20,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 83
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Drums_Right",
+        "320k"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 65,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1442.1075439453125,
+        155.7646026611328
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 21,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 84
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Vocals_Left",
+        "320k"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 67,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1445.11328125,
+        248.95399475097656
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 24,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 86
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Bass_Left",
+        "320k"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 66,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1445.7301025390625,
+        291.400634765625
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 25,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 87
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Bass_Right",
+        "320k"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 69,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1446.6170654296875,
+        345.14990234375
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 27,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 88
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Other_Left",
+        "320k"
+      ],
+      "color": "#332922",
+      "bgcolor": "#593930"
+    },
+    {
+      "id": 16,
+      "type": "Audio Analysis",
+      "pos": [
+        667.8901977539062,
+        313.1650085449219
+      ],
+      "size": [
+        291.140625,
+        166
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_sep_model",
+          "type": "AUDIO_SEPARATION_MODEL",
+          "link": 15
+        },
+        {
+          "name": "batch_size",
+          "type": "INT",
+          "link": 16
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": 17
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 26
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processed_audio",
+          "type": "AUDIO",
+          "links": [
+            14,
+            79
+          ]
+        },
+        {
+          "name": "original_audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "audio_weights",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "graph_audio",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui_yvann-nodes",
+        "ver": "2.0.2",
+        "Node name for S&R": "Audio Analysis"
+      },
+      "widgets_values": [
+        "Vocals Only",
+        0.5,
+        1
+      ],
+      "color": "#323",
+      "bgcolor": "#535",
+      "shape": 1
+    },
+    {
+      "id": 64,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1442.724365234375,
+        198.21124267578125
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 22,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 85
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Vocals_Right",
+        "320k"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 62,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1439.98779296875,
+        66.72315979003906
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 19,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 82
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Drums_Left",
+        "320k"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 17,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1228.3397216796875,
+        291.3359375
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 13,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 14
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Vocals",
+        "320k"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 21,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1224.649658203125,
+        732.8267211914062
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 17,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 22
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Other",
+        "320k"
+      ],
+      "color": "#332922",
+      "bgcolor": "#593930"
+    },
+    {
+      "id": 12,
+      "type": "Audio Analysis",
+      "pos": [
+        672.0982666015625,
+        89.96082305908203
+      ],
+      "size": [
+        291.140625,
+        166
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_sep_model",
+          "type": "AUDIO_SEPARATION_MODEL",
+          "link": 9
+        },
+        {
+          "name": "batch_size",
+          "type": "INT",
+          "link": 10
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": 12
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "processed_audio",
+          "type": "AUDIO",
+          "links": [
+            11,
+            78
+          ]
+        },
+        {
+          "name": "original_audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "audio_weights",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "graph_audio",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui_yvann-nodes",
+        "ver": "2.0.2",
+        "Node name for S&R": "Audio Analysis"
+      },
+      "widgets_values": [
+        "Drums Only",
+        0.5,
+        1
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "shape": 1
+    },
+    {
+      "id": 15,
+      "type": "PrimitiveFloat",
+      "pos": [
+        191.49830627441406,
+        619.1840209960938
+      ],
+      "size": [
+        261.7331848144531,
+        58
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            12,
+            17,
+            21,
+            25
+          ]
+        }
+      ],
+      "title": "FPS",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "PrimitiveFloat"
+      },
+      "widgets_values": [
+        1
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 68,
+      "type": "SaveAudioMP3",
+      "pos": [
+        1447.23388671875,
+        387.5965881347656
+      ],
+      "size": [
+        270,
+        136
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 30,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 89
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "SaveAudioMP3"
+      },
+      "widgets_values": [
+        "audio/Love Drug/LD_Other_Right",
+        "320k"
+      ],
+      "color": "#332922",
+      "bgcolor": "#593930"
+    },
+    {
+      "id": 60,
+      "type": "SET_AudioSplit2Channels",
+      "pos": [
+        979.1655883789062,
+        542.0505981445312
+      ],
+      "size": [
+        181.54745483398438,
+        46
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 80
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_left",
+          "type": "AUDIO",
+          "links": [
+            86,
+            299
+          ]
+        },
+        {
+          "name": "audio_right",
+          "type": "AUDIO",
+          "links": [
+            87,
+            300
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "audio-batch",
+        "ver": "1.3.1",
+        "Node name for S&R": "SET_AudioSplit2Channels",
+        "aux_id": "set-soft/ComfyUI-AudioBatch"
+      },
+      "widgets_values": [],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 58,
+      "type": "SET_AudioSplit2Channels",
+      "pos": [
+        976.1605834960938,
+        88.87863159179688
+      ],
+      "size": [
+        181.54745483398438,
+        46
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 78
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_left",
+          "type": "AUDIO",
+          "links": [
+            82,
+            279,
+            376
+          ]
+        },
+        {
+          "name": "audio_right",
+          "type": "AUDIO",
+          "links": [
+            83,
+            287,
+            382
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "audio-batch",
+        "ver": "1.3.1",
+        "Node name for S&R": "SET_AudioSplit2Channels",
+        "aux_id": "set-soft/ComfyUI-AudioBatch"
+      },
+      "widgets_values": [],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 59,
+      "type": "SET_AudioSplit2Channels",
+      "pos": [
+        982.1725463867188,
+        767.5090942382812
+      ],
+      "size": [
+        181.54745483398438,
+        46
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 81
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_left",
+          "type": "AUDIO",
+          "links": [
+            88,
+            280,
+            292,
+            377
+          ]
+        },
+        {
+          "name": "audio_right",
+          "type": "AUDIO",
+          "links": [
+            89,
+            288,
+            294,
+            383
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "audio-batch",
+        "ver": "1.3.1",
+        "Node name for S&R": "SET_AudioSplit2Channels",
+        "aux_id": "set-soft/ComfyUI-AudioBatch"
+      },
+      "widgets_values": [],
+      "color": "#332922",
+      "bgcolor": "#593930"
+    },
+    {
+      "id": 61,
+      "type": "SET_AudioSplit2Channels",
+      "pos": [
+        976.1602172851562,
+        312.0826416015625
+      ],
+      "size": [
+        181.54745483398438,
+        46
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 79
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_left",
+          "type": "AUDIO",
+          "links": [
+            84,
+            289,
+            381
+          ]
+        },
+        {
+          "name": "audio_right",
+          "type": "AUDIO",
+          "links": [
+            85,
+            290,
+            385
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "audio-batch",
+        "ver": "1.3.1",
+        "Node name for S&R": "SET_AudioSplit2Channels",
+        "aux_id": "set-soft/ComfyUI-AudioBatch"
+      },
+      "widgets_values": [],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 205,
+      "type": "CM_FloatToInt",
+      "pos": [
+        241.6858673095703,
+        790.5582275390625
+      ],
+      "size": [
+        210,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "FLOAT",
+          "widget": {
+            "name": "a"
+          },
+          "link": 387
+        }
+      ],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            388
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "ComfyMath",
+        "ver": "c01177221c31b8e5fbc062778fc8254aeb541638",
+        "Node name for S&R": "CM_FloatToInt"
+      },
+      "widgets_values": [
+        0
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 204,
+      "type": "SoundFlow_GetLength",
+      "pos": [
+        304.6698303222656,
+        724.3719482421875
+      ],
+      "size": [
+        148.87167358398438,
+        26
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 386
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            387
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "soundflow",
+        "ver": "1.0.0",
+        "Node name for S&R": "SoundFlow_GetLength"
+      },
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 13,
+      "type": "PrimitiveInt",
+      "pos": [
+        188.04100036621094,
+        488.86883544921875
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "INT",
+          "widget": {
+            "name": "value"
+          },
+          "link": 388
+        }
+      ],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            10,
+            16,
+            20,
+            24
+          ]
+        }
+      ],
+      "title": "Batch Size",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        200,
+        "fixed"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 10,
+      "type": "Load Audio Separation Model",
+      "pos": [
+        183.20083618164062,
+        386.1808166503906
+      ],
+      "size": [
+        284.3677673339844,
+        58
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "audio_sep_model",
+          "type": "AUDIO_SEPARATION_MODEL",
+          "links": [
+            9,
+            15,
+            19,
+            23
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui_yvann-nodes",
+        "ver": "2.0.2",
+        "Node name for S&R": "Load Audio Separation Model"
+      },
+      "widgets_values": [
+        "Open-Unmix"
+      ],
+      "color": "#153a61",
+      "bgcolor": "#1A4870",
+      "shape": 1
+    },
+    {
+      "id": 155,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        89.82579803466797
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 279
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 280
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            370
+          ]
+        }
+      ],
+      "title": "left",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 157,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        245.82589721679688
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 289
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 290
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            291
+          ]
+        }
+      ],
+      "title": "c_1",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 158,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        557.8262329101562
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 33,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 291
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 292
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            293
+          ]
+        }
+      ],
+      "title": "c_2",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 159,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        791.826171875
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 36,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 293
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 294
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            372
+          ]
+        }
+      ],
+      "title": "center",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 200,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        401.8257751464844
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 376
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 377
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            380
+          ]
+        }
+      ],
+      "title": "srl_1",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 160,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        635.8261108398438
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 34,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 380
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 381
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            374
+          ]
+        }
+      ],
+      "title": "surround left",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 202,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        479.8260192871094
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 382
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 383
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            384
+          ]
+        }
+      ],
+      "title": "srr1",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 161,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        713.8260498046875
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 35,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 384
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 385
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            375
+          ]
+        }
+      ],
+      "title": "surround right",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 162,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        323.8258056640625
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 299
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 300
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            373
+          ]
+        }
+      ],
+      "title": "LFE",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 156,
+      "type": "AudioCombine",
+      "pos": [
+        1744.6988525390625,
+        167.82589721679688
+      ],
+      "size": [
+        270,
+        78
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 287
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 288
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            371
+          ]
+        }
+      ],
+      "title": "right",
+      "properties": {
+        "cnr_id": "audio-separation-nodes-comfyui",
+        "ver": "1.4.0",
+        "Node name for S&R": "AudioCombine"
+      },
+      "widgets_values": [
+        "add"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 199,
+      "type": "SET_AudioBatch6_SaveCustom",
+      "pos": [
+        2020.8731689453125,
+        75.02024841308594
+      ],
+      "size": [
+        283.9507751464844,
+        182
+      ],
+      "flags": {},
+      "order": 37,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "left",
+          "type": "AUDIO",
+          "link": 370
+        },
+        {
+          "name": "right",
+          "type": "AUDIO",
+          "link": 371
+        },
+        {
+          "name": "center",
+          "type": "AUDIO",
+          "link": 372
+        },
+        {
+          "name": "lfe",
+          "type": "AUDIO",
+          "link": 373
+        },
+        {
+          "name": "left_surround",
+          "type": "AUDIO",
+          "link": 374
+        },
+        {
+          "name": "right_surround",
+          "type": "AUDIO",
+          "link": 375
+        },
+        {
+          "name": "filename",
+          "type": "STRING",
+          "widget": {
+            "name": "filename"
+          },
+          "link": 389
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_batch",
+          "type": "AUDIO",
+          "links": [
+            369
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "audio-batch",
+        "ver": "3930594171225c7a3445093cd17b162c540a160d",
+        "Node name for S&R": "SET_AudioBatch6_SaveCustom"
+      },
+      "widgets_values": [
+        "output/audio",
+        "Love Drug 5.1.wav"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 197,
+      "type": "DisplayEverything",
+      "pos": [
+        2439.158447265625,
+        71.61990356445312
+      ],
+      "size": [
+        547.8095703125,
+        380.80120849609375
+      ],
+      "flags": {},
+      "order": 38,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 369
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "skbundle",
+        "ver": "15df06c5be48b6fbb35c2de3f5d044c6f3364844"
+      },
+      "widgets_values": [
+        "{'waveform': tensor([[-8.4444e-05, -7.8673e-05, -7.0888e-05,  ..., -3.3903e-03,\n          1.8358e-02,  2.5657e-02],\n        [-3.5818e-04, -3.5982e-04, -3.5701e-04,  ..., -3.4077e-02,\n         -2.8117e-02, -3.1349e-02],\n        [-6.8751e-04, -6.8827e-04, -6.8206e-04,  ..., -3.3179e-01,\n         -2.8222e-01, -2.7471e-01],\n        [ 1.4753e-05,  1.4391e-05,  1.3979e-05,  ..., -3.3177e-01,\n         -3.3197e-01, -3.3213e-01],\n        [-1.8843e-04, -1.8974e-04, -1.8567e-04,  ..., -1.8125e-01,\n         -1.3819e-01, -1.1936e-01],\n        [-6.0519e-04, -5.9795e-04, -5.8451e-04,  ..., -1.4836e-01,\n         -1.4304e-01, -1.5827e-01]]), 'sample_rate': 44100}"
+      ],
+      "color": "#323",
+      "bgcolor": "#535",
+      "selectedFontIndex": 0,
+      "fontSize": "14px",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgba(0, 0, 0, 0.7)"
+    },
+    {
+      "id": 206,
+      "type": "PrimitiveString",
+      "pos": [
+        184.03981018066406,
+        263.2015380859375
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            389
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.48",
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "Love Drug (Mix-6).wav"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 9,
+      "type": "VHS_LoadAudio",
+      "pos": [
+        178.2209014892578,
+        81.99464416503906
+      ],
+      "size": [
+        285.369140625,
+        126
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            13,
+            26,
+            27,
+            28,
+            386
+          ]
+        },
+        {
+          "name": "duration",
+          "type": "FLOAT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-videohelpersuite",
+        "ver": "330bce6c3c0d47ebdedcc0348d9ab355707b7523",
+        "Node name for S&R": "VHS_LoadAudio"
+      },
+      "widgets_values": {
+        "audio_file": "input/LD/Love Drug (Mix-",
+        "seek_seconds": 0,
+        "duration": 200
+      },
+      "color": "#223",
+      "bgcolor": "#335"
+    }
+  ],
+  "links": [
+    [
+      9,
+      10,
+      0,
+      12,
+      0,
+      "AUDIO_SEPARATION_MODEL"
+    ],
+    [
+      10,
+      13,
+      0,
+      12,
+      1,
+      "INT"
+    ],
+    [
+      11,
+      12,
+      0,
+      14,
+      0,
+      "AUDIO"
+    ],
+    [
+      12,
+      15,
+      0,
+      12,
+      2,
+      "FLOAT"
+    ],
+    [
+      13,
+      9,
+      0,
+      12,
+      3,
+      "AUDIO"
+    ],
+    [
+      14,
+      16,
+      0,
+      17,
+      0,
+      "AUDIO"
+    ],
+    [
+      15,
+      10,
+      0,
+      16,
+      0,
+      "AUDIO_SEPARATION_MODEL"
+    ],
+    [
+      16,
+      13,
+      0,
+      16,
+      1,
+      "INT"
+    ],
+    [
+      17,
+      15,
+      0,
+      16,
+      2,
+      "FLOAT"
+    ],
+    [
+      18,
+      18,
+      0,
+      19,
+      0,
+      "AUDIO"
+    ],
+    [
+      19,
+      10,
+      0,
+      18,
+      0,
+      "AUDIO_SEPARATION_MODEL"
+    ],
+    [
+      20,
+      13,
+      0,
+      18,
+      1,
+      "INT"
+    ],
+    [
+      21,
+      15,
+      0,
+      18,
+      2,
+      "FLOAT"
+    ],
+    [
+      22,
+      20,
+      0,
+      21,
+      0,
+      "AUDIO"
+    ],
+    [
+      23,
+      10,
+      0,
+      20,
+      0,
+      "AUDIO_SEPARATION_MODEL"
+    ],
+    [
+      24,
+      13,
+      0,
+      20,
+      1,
+      "INT"
+    ],
+    [
+      25,
+      15,
+      0,
+      20,
+      2,
+      "FLOAT"
+    ],
+    [
+      26,
+      9,
+      0,
+      16,
+      3,
+      "AUDIO"
+    ],
+    [
+      27,
+      9,
+      0,
+      18,
+      3,
+      "AUDIO"
+    ],
+    [
+      28,
+      9,
+      0,
+      20,
+      3,
+      "AUDIO"
+    ],
+    [
+      78,
+      12,
+      0,
+      58,
+      0,
+      "AUDIO"
+    ],
+    [
+      79,
+      16,
+      0,
+      61,
+      0,
+      "AUDIO"
+    ],
+    [
+      80,
+      18,
+      0,
+      60,
+      0,
+      "AUDIO"
+    ],
+    [
+      81,
+      20,
+      0,
+      59,
+      0,
+      "AUDIO"
+    ],
+    [
+      82,
+      58,
+      0,
+      62,
+      0,
+      "AUDIO"
+    ],
+    [
+      83,
+      58,
+      1,
+      63,
+      0,
+      "AUDIO"
+    ],
+    [
+      84,
+      61,
+      0,
+      65,
+      0,
+      "AUDIO"
+    ],
+    [
+      85,
+      61,
+      1,
+      64,
+      0,
+      "AUDIO"
+    ],
+    [
+      86,
+      60,
+      0,
+      67,
+      0,
+      "AUDIO"
+    ],
+    [
+      87,
+      60,
+      1,
+      66,
+      0,
+      "AUDIO"
+    ],
+    [
+      88,
+      59,
+      0,
+      69,
+      0,
+      "AUDIO"
+    ],
+    [
+      89,
+      59,
+      1,
+      68,
+      0,
+      "AUDIO"
+    ],
+    [
+      279,
+      58,
+      0,
+      155,
+      0,
+      "AUDIO"
+    ],
+    [
+      280,
+      59,
+      0,
+      155,
+      1,
+      "AUDIO"
+    ],
+    [
+      287,
+      58,
+      1,
+      156,
+      0,
+      "AUDIO"
+    ],
+    [
+      288,
+      59,
+      1,
+      156,
+      1,
+      "AUDIO"
+    ],
+    [
+      289,
+      61,
+      0,
+      157,
+      0,
+      "AUDIO"
+    ],
+    [
+      290,
+      61,
+      1,
+      157,
+      1,
+      "AUDIO"
+    ],
+    [
+      291,
+      157,
+      0,
+      158,
+      0,
+      "AUDIO"
+    ],
+    [
+      292,
+      59,
+      0,
+      158,
+      1,
+      "AUDIO"
+    ],
+    [
+      293,
+      158,
+      0,
+      159,
+      0,
+      "AUDIO"
+    ],
+    [
+      294,
+      59,
+      1,
+      159,
+      1,
+      "AUDIO"
+    ],
+    [
+      299,
+      60,
+      0,
+      162,
+      0,
+      "AUDIO"
+    ],
+    [
+      300,
+      60,
+      1,
+      162,
+      1,
+      "AUDIO"
+    ],
+    [
+      369,
+      199,
+      0,
+      197,
+      0,
+      "*"
+    ],
+    [
+      370,
+      155,
+      0,
+      199,
+      0,
+      "AUDIO"
+    ],
+    [
+      371,
+      156,
+      0,
+      199,
+      1,
+      "AUDIO"
+    ],
+    [
+      372,
+      159,
+      0,
+      199,
+      2,
+      "AUDIO"
+    ],
+    [
+      373,
+      162,
+      0,
+      199,
+      3,
+      "AUDIO"
+    ],
+    [
+      374,
+      160,
+      0,
+      199,
+      4,
+      "AUDIO"
+    ],
+    [
+      375,
+      161,
+      0,
+      199,
+      5,
+      "AUDIO"
+    ],
+    [
+      376,
+      58,
+      0,
+      200,
+      0,
+      "AUDIO"
+    ],
+    [
+      377,
+      59,
+      0,
+      200,
+      1,
+      "AUDIO"
+    ],
+    [
+      380,
+      200,
+      0,
+      160,
+      0,
+      "AUDIO"
+    ],
+    [
+      381,
+      61,
+      0,
+      160,
+      1,
+      "AUDIO"
+    ],
+    [
+      382,
+      58,
+      1,
+      202,
+      0,
+      "AUDIO"
+    ],
+    [
+      383,
+      59,
+      1,
+      202,
+      1,
+      "AUDIO"
+    ],
+    [
+      384,
+      202,
+      0,
+      161,
+      0,
+      "AUDIO"
+    ],
+    [
+      385,
+      61,
+      1,
+      161,
+      1,
+      "AUDIO"
+    ],
+    [
+      386,
+      9,
+      0,
+      204,
+      0,
+      "AUDIO"
+    ],
+    [
+      387,
+      204,
+      0,
+      205,
+      0,
+      "FLOAT"
+    ],
+    [
+      388,
+      205,
+      0,
+      13,
+      0,
+      "INT"
+    ],
+    [
+      389,
+      206,
+      0,
+      199,
+      6,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "5.1 Channels",
+      "bounding": [
+        1661.55419921875,
+        -12.577856063842773,
+        1515.0087890625,
+        835.0118408203125
+      ],
+      "color": "#a1309b",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Save Split Channels",
+      "bounding": [
+        1415.0531005859375,
+        -11.074773788452148,
+        236.19570922851562,
+        768.4005126953125
+      ],
+      "color": "#b58b2a",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Save Split Audio",
+      "bounding": [
+        1207.630126953125,
+        -9.571701049804688,
+        195.61314392089844,
+        765.3944091796875
+      ],
+      "color": "#b58b2a",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 6,
+      "title": "Analyse and Split Audio",
+      "bounding": [
+        662.0198364257812,
+        -9.571698188781738,
+        532.298095703125,
+        959.2888793945312
+      ],
+      "color": "#88A",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 7,
+      "title": "Audio Input and Settings",
+      "bounding": [
+        170.52053833007812,
+        -6.56559419631958,
+        483.09014892578125,
+        954.36474609375
+      ],
+      "color": "#b58b2a",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.4659551289582046,
+      "offset": [
+        343.8198699951174,
+        472.50808712979585
+      ]
+    },
+    "frontendVersion": "1.23.4",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}
