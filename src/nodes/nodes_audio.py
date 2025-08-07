@@ -58,8 +58,20 @@ class AudioBatch:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "audio1": ("AUDIO", {"tooltip": "The first audio input. Can be a single audio item or a batch"}),
-                "audio2": ("AUDIO", {"tooltip": "The second audio input. Can be a single audio item or a batch"}),
+                "left": ("AUDIO", {"tooltip": "Left channel (L)"}),
+                "right": ("AUDIO", {"tooltip": "Right channel (R)"}),
+                "center": ("AUDIO", {"tooltip": "Center channel (C)"}),
+                "lfe": ("AUDIO", {"tooltip": "Low Frequency Effects (LFE)"}),
+                "left_surround": ("AUDIO", {"tooltip": "Left Surround (Ls)"}),
+                "right_surround": ("AUDIO", {"tooltip": "Right Surround (Rs)"}),
+                "output_folder": ("STRING", {
+                    "default": "outputs/audio",
+                    "tooltip": "Folder to save the WAV file in"
+                }),
+                "filename": ("STRING", {
+                    "default": "output_5_1.wav",
+                    "tooltip": "Filename for the WAV file"
+                }),
             }
         }
 
@@ -67,22 +79,54 @@ class AudioBatch:
     RETURN_NAMES = ("audio_batch",)
     FUNCTION = "batch_audio"
     CATEGORY = BASE_CATEGORY + "/" + BATCH_CATEGORY
-    DESCRIPTION = "Audio batch creator"
-    UNIQUE_NAME = "SET_AudioBatch"
-    DISPLAY_NAME = "Batch Audios"
+    DESCRIPTION = "Combine 6 mono audio inputs into a multichannel 5.1 batch and save to a WAV file"
+    UNIQUE_NAME = "SET_AudioBatch6_SaveCustom"
+    DISPLAY_NAME = "Batch 6 Audios + Save to File"
 
-    def batch_audio(self, audio1: dict, audio2: dict):
-        # 1. Instantiate the aligner
-        aligner = AudioBatchAligner(audio1, audio2)
-        # 2. Get the aligned waveforms
-        aligned_wf1, aligned_wf2, target_sr = aligner.get_aligned_waveforms()
-        # 3. Concatenate
-        batched_waveform_final = torch.cat((aligned_wf1, aligned_wf2), dim=0)
+    def batch_audio(
+        self,
+        left, right, center, lfe, left_surround, right_surround,
+        output_folder, filename
+    ):
+        inputs = [left, right, center, lfe, left_surround, right_surround]
 
-        logger.info(f"Final batched audio: shape={batched_waveform_final.shape}, sr={target_sr}")
+        # Ensure all sample rates match
+        sample_rates = [a["sample_rate"] for a in inputs]
+        if len(set(sample_rates)) != 1:
+            raise ValueError(f"All input sample rates must match. Got: {sample_rates}")
+        sample_rate = sample_rates[0]
 
-        output_audio = {"waveform": batched_waveform_final, "sample_rate": target_sr}
-        return (output_audio,)
+        # Squeeze and pad waveforms to match longest
+        waveforms = [a["waveform"].squeeze() for a in inputs]
+        max_len = max(wf.shape[-1] for wf in waveforms)
+        padded_waveforms = [
+            torch.nn.functional.pad(wf, (0, max_len - wf.shape[-1]))
+            for wf in waveforms
+        ]
+
+        # Stack into shape [6, N] for multichannel audio
+        waveform = torch.stack(padded_waveforms)
+
+        # Prepare file path
+        output_folder = output_folder.strip().rstrip("/\\")
+        filename = filename.strip()
+        if not filename.endswith(".wav"):
+            filename += ".wav"
+        output_path = os.path.join(output_folder, filename)
+
+        # Ensure folder exists
+        os.makedirs(output_folder, exist_ok=True)
+
+        # Save to multichannel WAV
+        torchaudio.save(output_path, waveform, sample_rate)
+
+        logger.info(f"Saved 5.1 audio to: {output_path}")
+        logger.info(f"Shape: {waveform.shape}, Sample rate: {sample_rate}")
+
+        return ({
+            "waveform": waveform,
+            "sample_rate": sample_rate
+        },)
 
 
 class SelectAudioFromBatch:
